@@ -35,6 +35,10 @@ regex
     : alternative (VERT_BAR alternative)* REGEX_END
     ;
 
+inner_regex
+    : alternative (VERT_BAR alternative)*
+    ;
+
 alternative
     : term*
     ;
@@ -70,7 +74,7 @@ atom
     | DOT
     | BACKSLASH atom_escape
     | character_class
-    | PAREN_OPEN (QUESTION_MARK COLON)? regex PAREN_CLOSED
+    | PAREN_OPEN (QUESTION_MARK COLON)? inner_regex PAREN_CLOSED
     | rule_reference //Extension to support rule reuse
     ;
 
@@ -182,6 +186,7 @@ class_atom_no_dash
     | CURLY_CLOSED
     | COLON
     | BRACKET_OPEN
+    | UNDERLINE
     ;
 
 class_escape
