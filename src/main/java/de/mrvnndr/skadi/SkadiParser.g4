@@ -1,7 +1,7 @@
-parser grammar skadi_parse;
+parser grammar SkadiParser;
 
 options {
-    tokenVocab = skadi_lex;
+    tokenVocab = SkadiLexer;
 }
 
 file

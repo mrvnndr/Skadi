@@ -1,7 +1,7 @@
 package de.mrvnndr.skadi;
 
-import de.mrvnndr.skadi.antlr.skadi_lex;
-import de.mrvnndr.skadi.antlr.skadi_parse;
+import de.mrvnndr.skadi.analysis.SkadiLexer;
+import de.mrvnndr.skadi.analysis.SkadiParser;
 import org.antlr.v4.runtime.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -41,10 +41,10 @@ public class RegexParseTest {
         var is = CharStreams.fromString(input + "\n");
         var lexer = new BailSkadiLexer(is);
         var tokenStream = new CommonTokenStream(lexer);
-        var parser = new skadi_parse(tokenStream);
+        var parser = new SkadiParser(tokenStream);
         parser.setErrorHandler(new BailErrorStrategy());
 
-        lexer.pushMode(skadi_lex.REGEX);
+        lexer.pushMode(SkadiLexer.REGEX);
         parser.regex();
     }
 
@@ -65,7 +65,7 @@ public class RegexParseTest {
     }
 
 
-    private static class BailSkadiLexer extends skadi_lex {
+    private static class BailSkadiLexer extends SkadiLexer {
         public BailSkadiLexer(CharStream input) {
             super(input);
         }

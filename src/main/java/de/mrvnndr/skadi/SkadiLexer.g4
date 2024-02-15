@@ -1,4 +1,4 @@
-lexer grammar skadi_lex;
+lexer grammar SkadiLexer;
 
 tokens {
     ACTION_END,
