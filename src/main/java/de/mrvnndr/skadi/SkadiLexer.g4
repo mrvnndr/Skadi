@@ -47,7 +47,7 @@ tokens {
     REGEX_END,
     SECTION_SEP,
     STAR,
-    UNDERLINE,
+    UNDERSCORE,
     VERT_BAR,
     ZERO
 }
@@ -149,7 +149,7 @@ REGEX_BRACKET_OPEN   : '['          -> type(BRACKET_OPEN);
 REGEX_BRACKET_CLOSED : ']'          -> type(BRACKET_CLOSED);
 REGEX_CIRCUMFLEX     : '^'          -> type(CIRCUMFLEX);
 REGEX_DASH           : '-'          -> type(DASH);
-REGEX_UNDERLINE      : '_'          -> type(UNDERLINE);
+REGEX_UNDERLINE      : '_'          -> type(UNDERSCORE);
 REGEX_STAR           : '*'          -> type(STAR);
 REGEX_BACKSLASH      : '\\'         -> type(BACKSLASH);
 REGEX_DOT            : '.'          -> type(DOT);
@@ -204,7 +204,7 @@ REGEX_RULES_BRACKET_OPEN   : '['          -> type(BRACKET_OPEN), mode(REGEX_LOCK
 REGEX_RULES_BRACKET_CLOSED : ']'          -> type(BRACKET_CLOSED), mode(REGEX_LOCK);
 REGEX_RULES_CIRCUMFLEX     : '^'          -> type(CIRCUMFLEX), mode(REGEX_LOCK);
 REGEX_RULES_DASH           : '-'          -> type(DASH), mode(REGEX_LOCK);
-REGEX_RULES_UNDERLINE      : '_'          -> type(UNDERLINE), mode(REGEX_LOCK);
+REGEX_RULES_UNDERLINE      : '_'          -> type(UNDERSCORE), mode(REGEX_LOCK);
 REGEX_RULES_STAR           : '*'          -> type(STAR), mode(REGEX_LOCK);
 REGEX_RULES_BACKSLASH      : '\\'         -> type(BACKSLASH), mode(REGEX_LOCK);
 REGEX_RULES_DOT            : '.'          -> type(DOT), mode(REGEX_LOCK);
@@ -255,7 +255,7 @@ REGEX_LOCK_BRACKET_OPEN   : '['          -> type(BRACKET_OPEN);
 REGEX_LOCK_BRACKET_CLOSED : ']'          -> type(BRACKET_CLOSED);
 REGEX_LOCK_CIRCUMFLEX     : '^'          -> type(CIRCUMFLEX);
 REGEX_LOCK_DASH           : '-'          -> type(DASH);
-REGEX_LOCK_UNDERLINE      : '_'          -> type(UNDERLINE);
+REGEX_LOCK_UNDERLINE      : '_'          -> type(UNDERSCORE);
 REGEX_LOCK_STAR           : '*'          -> type(STAR);
 REGEX_LOCK_BACKSLASH      : '\\'         -> type(BACKSLASH);
 REGEX_LOCK_DOT            : '.'          -> type(DOT);

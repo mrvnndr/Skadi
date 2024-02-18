@@ -44,9 +44,9 @@ alternative
     ;
 
 term
-    : atom
-    | atom quantifier
-    | assertion
+    : atom            # atomBase
+    | atom quantifier # atomQuantifier
+    | assertion       # atomAssertion
     ;
 
 assertion //Lookahead is not supported
@@ -61,27 +61,27 @@ quantifier //Lazy missing
     ;
 
 quantifier_prefix
-    : STAR
-    | PLUS
-    | QUESTION_MARK
-    | CURLY_OPEN digit+ CURLY_CLOSED
-    | CURLY_OPEN digit+ COMMA CURLY_CLOSED
-    | CURLY_OPEN digit+ COMMA digit+ CURLY_CLOSED
+    : STAR                                                            # quantifierStar
+    | PLUS                                                            # quantifierPlus
+    | QUESTION_MARK                                                   # quantifierQuestionMark
+    | CURLY_OPEN digit+ CURLY_CLOSED                                  # quantifierExactly
+    | CURLY_OPEN digit+ COMMA CURLY_CLOSED                            # quantifierAtLeast
+    | CURLY_OPEN (amtL += digit)+ COMMA (amtH += digit)+ CURLY_CLOSED # quantifierBetween
     ;
 
 atom
-    : pattern_char
-    | DOT
-    | BACKSLASH atom_escape
-    | character_class
-    | PAREN_OPEN (QUESTION_MARK COLON)? inner_regex PAREN_CLOSED
-    | rule_reference //Extension to support rule reuse
+    : pattern_char                                               # atomPatternChar
+    | DOT                                                        # atomDot
+    | BACKSLASH atom_escape                                      # atomAtomEscape
+    | character_class                                            # atomCharacterClass
+    | PAREN_OPEN (QUESTION_MARK COLON)? inner_regex PAREN_CLOSED # atomParenRegex
+    | rule_reference                                             # atomRuleReference //Extension to support rule reuse
     ;
 
 atom_escape
     : decimal_escape
-    | character_escape
     | character_class_escape
+    | character_escape
     ;
 
 character_escape
@@ -153,13 +153,13 @@ class_ranges
 non_empty_class_ranges
     : class_atom
     | class_atom non_empty_class_ranges_no_dash
-    | class_atom DASH class_atom class_ranges
+    | from = class_atom DASH to = class_atom class_ranges
     ;
 
 non_empty_class_ranges_no_dash
     : class_atom
     | class_atom_no_dash non_empty_class_ranges_no_dash
-    | class_atom_no_dash DASH class_atom class_ranges
+    | from = class_atom_no_dash DASH to = class_atom class_ranges
     ;
 
 class_atom
@@ -186,14 +186,14 @@ class_atom_no_dash
     | CURLY_CLOSED
     | COLON
     | BRACKET_OPEN
-    | UNDERLINE
+    | UNDERSCORE
     ;
 
 class_escape
     : decimal_escape
     | CH_b
-    | character_escape
     | character_class_escape
+    | character_escape
     ;
 
 rule_reference
@@ -201,7 +201,7 @@ rule_reference
     ;
 
 rule_name
-    : (UNDERLINE | char) (char | digit | UNDERLINE | DASH)*
+    : (UNDERSCORE | char) (char | digit | UNDERSCORE | DASH)*
     ;
 
 pattern_char
