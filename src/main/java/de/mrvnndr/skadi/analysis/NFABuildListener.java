@@ -314,16 +314,19 @@ public class NFABuildListener extends SkadiParserBaseListener {
 
     @Override
     public void exitCharacter_class_escape(SkadiParser.Character_class_escapeContext ctx) {
-        var w = IntStream.range(0, 128).mapToObj(i -> (char) i).filter(c -> Character.isAlphabetic(c) || c == '_');
         var digits = Set.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
         var whitespace = Set.of('\n', '\r', '\t', '\f', (char) 11, ' ');
+        var w = IntStream.range(0, 128)
+                .mapToObj(i -> (char) i)
+                .filter(c -> Character.isAlphabetic(c) || c == '_' || Character.isDigit(c))
+                .toList();
         Set<Character> result = switch (ctx.getText()) {
             case "d" -> digits;
             case "D" -> invertSet(digits);
             case "s" -> whitespace;
             case "S" -> invertSet(whitespace);
-            case "w" -> new HashSet<>(w.toList());
-            case "W" -> invertSet(w.toList());
+            case "w" -> new HashSet<>(w);
+            case "W" -> invertSet(w);
             default -> throw new IllegalStateException("Unexpected value: " + ctx.getText());
         };
         chars.put(ctx, result);
