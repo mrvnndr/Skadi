@@ -3,9 +3,11 @@ package de.mrvnndr.skadi;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.SimpleDirectedGraph;
-import org.jgrapht.traverse.BreadthFirstIterator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public record ThompsonNFA(Graph<NFANode, NFAEdge> nfa, NFANode startNode, NFANode acceptNode) {
 
@@ -83,36 +85,10 @@ public record ThompsonNFA(Graph<NFANode, NFAEdge> nfa, NFANode startNode, NFANod
     }
 
     public static ThompsonNFA copyAndReindex(ThompsonNFA nfa, int startIndex) {
-        Graph<NFANode, NFAEdge> newNFA = new SimpleDirectedGraph<>(NFAEdge.class);
-        Map<Integer, NFANode> oldIdNewNodeMap = new HashMap<>();
-
-        var iter = new BreadthFirstIterator<>(nfa.nfa(), nfa.startNode);
-        int index = startIndex;
-
-        while (iter.hasNext()) {
-            var node = iter.next();
-            var newNode = new NFANode(index++);
-            newNode.setStart(node.isStart()).setAccepting(node.isAccepting());
-            oldIdNewNodeMap.put(node.getId(), newNode);
-            newNFA.addVertex(newNode);
-        }
-
-        for (var oldEdge : nfa.nfa().edgeSet()) {
-            var newEdge = new NFAEdge(oldEdge.isEpsilon());
-            newEdge.insertAll(oldEdge.getChars());
-
-            var oldSource = nfa.nfa().getEdgeSource(oldEdge);
-            var oldTarget = nfa.nfa().getEdgeTarget(oldEdge);
-
-            var newSource = oldIdNewNodeMap.get(oldSource.getId());
-            var newTarget = oldIdNewNodeMap.get(oldTarget.getId());
-
-            newNFA.addEdge(newSource, newTarget, newEdge);
-        }
-
-        var newStart = oldIdNewNodeMap.get(nfa.startNode().getId());
-        var newAccept = oldIdNewNodeMap.get(nfa.acceptNode().getId());
-        return new ThompsonNFA(newNFA, newStart, newAccept);
+        Graph<NFANode, NFAEdge> newNFA = GraphUtil.copyAndReindex(nfa.nfa, nfa.startNode, startIndex);
+        var newStart = newNFA.vertexSet().stream().filter(NFANode::isStart).findAny();
+        var newAccept = newNFA.vertexSet().stream().filter(NFANode::isAccepting).findAny();
+        return new ThompsonNFA(newNFA, newStart.orElseThrow(), newAccept.orElseThrow());
     }
 
     private static ThompsonNFA simpleTransition(Collection<Character> chars, boolean epsilon) {
