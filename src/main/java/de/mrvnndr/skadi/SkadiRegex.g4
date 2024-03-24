@@ -1,38 +1,7 @@
-parser grammar SkadiParser;
+grammar SkadiRegex;
 
-options {
-    tokenVocab = SkadiLexer;
-}
-
-file
-    : definitions_section SECTION_SEP rules (SECTION_SEP user_code)? EOF
-    ;
-
-definitions_section
-    : (HOST_CODE | COMMENT | definition)*
-    ;
-
-definition
-    : NAME regex
-    ;
-
-rules
-    : (HOST_CODE | COMMENT)* rule (rule | COMMENT)*
-    ;
-
-rule
-    : regex HOST_CODE* ACTION_END
-    ;
-
-user_code
-    : .*
-    ;
-
-//Everything below here is the regex grammar closely aligned to the ECMAScript standard (ES7) but with a few additions
-//and omissions appropriate for the use case
-//--------------------------------------------------------------------------------------
 regex
-    : alternative (VERT_BAR alternative)* REGEX_END
+    : alternative (VERT_BAR alternative)* EOF
     ;
 
 inner_regex
@@ -71,7 +40,7 @@ quantifier_prefix
 
 atom
     : pattern_char                                               # atomPatternChar
-    | DOT                                                        # atomDot
+    | PERIOD                                                     # atomPeriod
     | BACKSLASH atom_escape                                      # atomAtomEscape
     | character_class                                            # atomCharacterClass
     | PAREN_OPEN (QUESTION_MARK COLON)? inner_regex PAREN_CLOSED # atomParenRegex
@@ -178,7 +147,7 @@ class_atom_no_dash
     | DOLLAR
     | STAR
     | PLUS
-    | DOT
+    | PERIOD
     | QUESTION_MARK
     | PAREN_OPEN
     | PAREN_CLOSED
@@ -242,3 +211,51 @@ char
     | CH_W
     | CHAR
     ;
+
+
+CH_a : 'a';
+CH_b : 'b';
+CH_c : 'c';
+CH_d : 'd';
+CH_e : 'e';
+CH_f : 'f';
+CH_n : 'n';
+CH_r : 'r';
+CH_s : 's';
+CH_t : 't';
+CH_v : 'v';
+CH_w : 'w';
+CH_x : 'x';
+
+CH_A : 'A';
+CH_B : 'B';
+CH_C : 'C';
+CH_D : 'D';
+CH_E : 'E';
+CH_F : 'F';
+CH_S : 'S';
+CH_W : 'W';
+
+ZERO           : '0';
+NON_ZERO_DIGIT : [1-9];
+
+PAREN_OPEN     : '(';
+PAREN_CLOSED   : ')';
+CURLY_OPEN     : '{';
+CURLY_CLOSED   : '}';
+BRACKET_OPEN   : '[';
+BRACKET_CLOSED : ']';
+CIRCUMFLEX     : '^';
+DASH           : '-';
+UNDERSCORE     : '_';
+STAR           : '*';
+BACKSLASH      : '\\';
+PERIOD         : '.';
+COMMA          : ',';
+DOLLAR         : '$';
+PLUS           : '+';
+COLON          : ':';
+QUESTION_MARK  : '?';
+VERT_BAR       : '|';
+CHAR           : [A-Za-z];
+PATTERN_CHAR   : ~[\\.*+?()[\]{}|^$];

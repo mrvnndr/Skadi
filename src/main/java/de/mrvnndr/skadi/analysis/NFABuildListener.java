@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class NFABuildListener extends SkadiParserBaseListener {
+public class NFABuildListener extends SkadiRegexBaseListener {
     private final ParseTreeProperty<ThompsonNFA> nfaFragments = new ParseTreeProperty<>();
     private final ParseTreeProperty<Quantifier> quantifiers = new ParseTreeProperty<>();
     private final ParseTreeProperty<Set<Character>> chars = new ParseTreeProperty<>();
@@ -22,27 +22,20 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitDefinition(SkadiParser.DefinitionContext ctx) {
-        var id = ctx.NAME().getText();
-        var nfa = nfaFragments.get(ctx.regex());
-        idNFAMap.put(id, nfa);
-    }
-
-    @Override
-    public void exitRegex(SkadiParser.RegexContext ctx) {
+    public void exitRegex(SkadiRegexParser.RegexContext ctx) {
         var alternatives = ctx.alternative();
         var nfa = analyzeRegex(alternatives);
         nfaFragments.put(ctx, nfa);
     }
 
     @Override
-    public void exitInner_regex(SkadiParser.Inner_regexContext ctx) {
+    public void exitInner_regex(SkadiRegexParser.Inner_regexContext ctx) {
         var alternatives = ctx.alternative();
         var nfa = analyzeRegex(alternatives);
         nfaFragments.put(ctx, nfa);
     }
 
-    private ThompsonNFA analyzeRegex(List<SkadiParser.AlternativeContext> alternatives) {
+    private ThompsonNFA analyzeRegex(List<SkadiRegexParser.AlternativeContext> alternatives) {
         var iter = alternatives.iterator();
         var firstAlt = iter.next();
         ThompsonNFA currentNFA = nfaFragments.get(firstAlt);
@@ -57,7 +50,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitAlternative(SkadiParser.AlternativeContext ctx) {
+    public void exitAlternative(SkadiRegexParser.AlternativeContext ctx) {
         var terms = ctx.term();
         if (terms.isEmpty()) {
             nfaFragments.put(ctx, ThompsonNFA.empty());
@@ -78,12 +71,12 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitAtomBase(SkadiParser.AtomBaseContext ctx) {
+    public void exitAtomBase(SkadiRegexParser.AtomBaseContext ctx) {
         nfaFragments.put(ctx, nfaFragments.get(ctx.atom()));
     }
 
     @Override
-    public void exitAtomQuantifier(SkadiParser.AtomQuantifierContext ctx) {
+    public void exitAtomQuantifier(SkadiRegexParser.AtomQuantifierContext ctx) {
         var baseNFA = nfaFragments.get(ctx.atom());
         var quantifier = quantifiers.get(ctx.quantifier());
         var low = quantifier.atLeast();
@@ -123,32 +116,32 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitAtomAssertion(SkadiParser.AtomAssertionContext ctx) {
+    public void exitAtomAssertion(SkadiRegexParser.AtomAssertionContext ctx) {
         throw new SemanticAnalysisException("Assertions not implemented!", ctx.start);
     }
 
     @Override
-    public void exitQuantifier(SkadiParser.QuantifierContext ctx) {
+    public void exitQuantifier(SkadiRegexParser.QuantifierContext ctx) {
         quantifiers.put(ctx, quantifiers.get(ctx.quantifier_prefix()));
     }
 
     @Override
-    public void exitQuantifierStar(SkadiParser.QuantifierStarContext ctx) {
+    public void exitQuantifierStar(SkadiRegexParser.QuantifierStarContext ctx) {
         quantifiers.put(ctx, new Quantifier(0, -1));
     }
 
     @Override
-    public void exitQuantifierPlus(SkadiParser.QuantifierPlusContext ctx) {
+    public void exitQuantifierPlus(SkadiRegexParser.QuantifierPlusContext ctx) {
         quantifiers.put(ctx, new Quantifier(1, -1));
     }
 
     @Override
-    public void exitQuantifierQuestionMark(SkadiParser.QuantifierQuestionMarkContext ctx) {
+    public void exitQuantifierQuestionMark(SkadiRegexParser.QuantifierQuestionMarkContext ctx) {
         quantifiers.put(ctx, new Quantifier(0, 1));
     }
 
     @Override
-    public void exitQuantifierExactly(SkadiParser.QuantifierExactlyContext ctx) {
+    public void exitQuantifierExactly(SkadiRegexParser.QuantifierExactlyContext ctx) {
         var amount = assembleNumber(ctx.digit());
 
         if (amount == 0) {
@@ -159,13 +152,13 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitQuantifierAtLeast(SkadiParser.QuantifierAtLeastContext ctx) {
+    public void exitQuantifierAtLeast(SkadiRegexParser.QuantifierAtLeastContext ctx) {
         var amount = assembleNumber(ctx.digit());
         quantifiers.put(ctx, new Quantifier(amount, -1));
     }
 
     @Override
-    public void exitQuantifierBetween(SkadiParser.QuantifierBetweenContext ctx) {
+    public void exitQuantifierBetween(SkadiRegexParser.QuantifierBetweenContext ctx) {
         var amountLow = assembleNumber(ctx.amtL);
         var amountHigh = assembleNumber(ctx.amtH);
 
@@ -180,13 +173,13 @@ public class NFABuildListener extends SkadiParserBaseListener {
         quantifiers.put(ctx, new Quantifier(amountLow, amountHigh));
     }
 
-    private int assembleNumber(List<SkadiParser.DigitContext> digits) {
+    private int assembleNumber(List<SkadiRegexParser.DigitContext> digits) {
         var string = digits.stream().map(RuleContext::getText).collect(Collectors.joining());
         return Integer.parseInt(string);
     }
 
     @Override
-    public void exitAtomPatternChar(SkadiParser.AtomPatternCharContext ctx) {
+    public void exitAtomPatternChar(SkadiRegexParser.AtomPatternCharContext ctx) {
         var text = ctx.pattern_char().getText();
 
         if (text.length() != 1) {
@@ -205,7 +198,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitAtomDot(SkadiParser.AtomDotContext ctx) {
+    public void exitAtomPeriod(SkadiRegexParser.AtomPeriodContext ctx) {
         var ascii = IntStream.range(0, 128)
                 .mapToObj(i -> (char) i)
                 .filter(c -> c != '\n' && c != '\r')
@@ -217,24 +210,24 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitAtomAtomEscape(SkadiParser.AtomAtomEscapeContext ctx) {
+    public void exitAtomAtomEscape(SkadiRegexParser.AtomAtomEscapeContext ctx) {
         var result = ThompsonNFA.characterTransition(chars.get(ctx.atom_escape()));
         nfaFragments.put(ctx, result);
     }
 
     @Override
-    public void exitAtomCharacterClass(SkadiParser.AtomCharacterClassContext ctx) {
+    public void exitAtomCharacterClass(SkadiRegexParser.AtomCharacterClassContext ctx) {
         var result = ThompsonNFA.characterTransition(chars.get(ctx.character_class()));
         nfaFragments.put(ctx, result);
     }
 
     @Override
-    public void exitAtomParenRegex(SkadiParser.AtomParenRegexContext ctx) {
+    public void exitAtomParenRegex(SkadiRegexParser.AtomParenRegexContext ctx) {
         nfaFragments.put(ctx, nfaFragments.get(ctx.inner_regex()));
     }
 
     @Override
-    public void exitAtomRuleReference(SkadiParser.AtomRuleReferenceContext ctx) {
+    public void exitAtomRuleReference(SkadiRegexParser.AtomRuleReferenceContext ctx) {
         var result = idNFAMap.get(ctx.rule_reference().rule_name().getText());
 
         if (result == null) {
@@ -245,7 +238,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitAtom_escape(SkadiParser.Atom_escapeContext ctx) {
+    public void exitAtom_escape(SkadiRegexParser.Atom_escapeContext ctx) {
         if (ctx.decimal_escape() != null) {
             chars.put(ctx, chars.get(ctx.decimal_escape()));
         } else if (ctx.character_escape() != null) {
@@ -256,7 +249,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitCharacter_escape(SkadiParser.Character_escapeContext ctx) {
+    public void exitCharacter_escape(SkadiRegexParser.Character_escapeContext ctx) {
         if (ctx.control_escape() != null) {
             chars.put(ctx, chars.get(ctx.control_escape()));
         } else if (ctx.control_letter() != null) {
@@ -269,7 +262,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitControl_escape(SkadiParser.Control_escapeContext ctx) {
+    public void exitControl_escape(SkadiRegexParser.Control_escapeContext ctx) {
         char c = switch (ctx.getText()) {
             case "f" -> '\f';
             case "n" -> '\n';
@@ -282,19 +275,19 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitControl_letter(SkadiParser.Control_letterContext ctx) {
+    public void exitControl_letter(SkadiRegexParser.Control_letterContext ctx) {
         var esc = ctx.getText().toLowerCase().charAt(0);
         var offset = esc - 'a' + 1;
         chars.put(ctx, Set.of((char) offset));
     }
 
     @Override
-    public void exitIdentity_escape(SkadiParser.Identity_escapeContext ctx) {
+    public void exitIdentity_escape(SkadiRegexParser.Identity_escapeContext ctx) {
         chars.put(ctx, Set.of(ctx.getText().charAt(0)));
     }
 
     @Override
-    public void exitDecimal_escape(SkadiParser.Decimal_escapeContext ctx) {
+    public void exitDecimal_escape(SkadiRegexParser.Decimal_escapeContext ctx) {
         var esc = Integer.parseInt(ctx.getText());
         if (esc > 127) {
             throw new SemanticAnalysisException("Non-ASCII char!", ctx.start);
@@ -303,7 +296,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitHex_escape_sequence(SkadiParser.Hex_escape_sequenceContext ctx) {
+    public void exitHex_escape_sequence(SkadiRegexParser.Hex_escape_sequenceContext ctx) {
         var str = ctx.hex_digit(0).getText() + ctx.hex_digit(1).getText();
         var esc = Integer.parseInt(str, 16);
         if (esc > 127) {
@@ -313,7 +306,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitCharacter_class_escape(SkadiParser.Character_class_escapeContext ctx) {
+    public void exitCharacter_class_escape(SkadiRegexParser.Character_class_escapeContext ctx) {
         var digits = Set.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
         var whitespace = Set.of('\n', '\r', '\t', '\f', (char) 11, ' ');
         var w = IntStream.range(0, 128)
@@ -338,7 +331,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitCharacter_class(SkadiParser.Character_classContext ctx) {
+    public void exitCharacter_class(SkadiRegexParser.Character_classContext ctx) {
         if (ctx.CIRCUMFLEX() == null) {
             chars.put(ctx, chars.get(ctx.class_ranges()));
         } else {
@@ -354,7 +347,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitClass_ranges(SkadiParser.Class_rangesContext ctx) {
+    public void exitClass_ranges(SkadiRegexParser.Class_rangesContext ctx) {
         if (ctx.non_empty_class_ranges() == null) {
             chars.put(ctx, Collections.emptySet());
         } else {
@@ -363,7 +356,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitNon_empty_class_ranges(SkadiParser.Non_empty_class_rangesContext ctx) {
+    public void exitNon_empty_class_ranges(SkadiRegexParser.Non_empty_class_rangesContext ctx) {
         if (ctx.non_empty_class_ranges_no_dash() != null) {
             var newChar = chars.get(ctx.class_atom(0));
             var newSet = new HashSet<>(chars.get(ctx.non_empty_class_ranges_no_dash()));
@@ -380,7 +373,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitNon_empty_class_ranges_no_dash(SkadiParser.Non_empty_class_ranges_no_dashContext ctx) {
+    public void exitNon_empty_class_ranges_no_dash(SkadiRegexParser.Non_empty_class_ranges_no_dashContext ctx) {
         if (ctx.non_empty_class_ranges_no_dash() != null) {
             var newChar = chars.get(ctx.class_atom_no_dash());
             var newSet = new HashSet<>(chars.get(ctx.non_empty_class_ranges_no_dash()));
@@ -419,7 +412,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitClass_atom(SkadiParser.Class_atomContext ctx) {
+    public void exitClass_atom(SkadiRegexParser.Class_atomContext ctx) {
         if (ctx.DASH() != null) {
             chars.put(ctx, Set.of('-'));
         } else {
@@ -428,7 +421,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitClass_atom_no_dash(SkadiParser.Class_atom_no_dashContext ctx) {
+    public void exitClass_atom_no_dash(SkadiRegexParser.Class_atom_no_dashContext ctx) {
         if (ctx.BACKSLASH() != null) {
             chars.put(ctx, chars.get(ctx.class_escape()));
         } else {
@@ -445,7 +438,7 @@ public class NFABuildListener extends SkadiParserBaseListener {
     }
 
     @Override
-    public void exitClass_escape(SkadiParser.Class_escapeContext ctx) {
+    public void exitClass_escape(SkadiRegexParser.Class_escapeContext ctx) {
         if (ctx.CH_b() != null) {
             chars.put(ctx, Set.of((char) 8));
         } else if (ctx.decimal_escape() != null) {

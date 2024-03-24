@@ -5,19 +5,19 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link SkadiParserListener},
+ * This class provides an empty implementation of {@link SkadiRegexListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
 @SuppressWarnings("CheckReturnValue")
-public class SkadiParserBaseListener implements SkadiParserListener {
+public class SkadiRegexBaseListener implements SkadiRegexListener {
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterFile(SkadiParser.FileContext ctx) {
+    public void enterRegex(SkadiRegexParser.RegexContext ctx) {
     }
 
     /**
@@ -26,7 +26,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitFile(SkadiParser.FileContext ctx) {
+    public void exitRegex(SkadiRegexParser.RegexContext ctx) {
     }
 
     /**
@@ -35,7 +35,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterDefinitions_section(SkadiParser.Definitions_sectionContext ctx) {
+    public void enterInner_regex(SkadiRegexParser.Inner_regexContext ctx) {
     }
 
     /**
@@ -44,7 +44,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitDefinitions_section(SkadiParser.Definitions_sectionContext ctx) {
+    public void exitInner_regex(SkadiRegexParser.Inner_regexContext ctx) {
     }
 
     /**
@@ -53,7 +53,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterDefinition(SkadiParser.DefinitionContext ctx) {
+    public void enterAlternative(SkadiRegexParser.AlternativeContext ctx) {
     }
 
     /**
@@ -62,7 +62,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitDefinition(SkadiParser.DefinitionContext ctx) {
+    public void exitAlternative(SkadiRegexParser.AlternativeContext ctx) {
     }
 
     /**
@@ -71,7 +71,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterRules(SkadiParser.RulesContext ctx) {
+    public void enterAtomBase(SkadiRegexParser.AtomBaseContext ctx) {
     }
 
     /**
@@ -80,7 +80,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitRules(SkadiParser.RulesContext ctx) {
+    public void exitAtomBase(SkadiRegexParser.AtomBaseContext ctx) {
     }
 
     /**
@@ -89,7 +89,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterRule(SkadiParser.RuleContext ctx) {
+    public void enterAtomQuantifier(SkadiRegexParser.AtomQuantifierContext ctx) {
     }
 
     /**
@@ -98,7 +98,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitRule(SkadiParser.RuleContext ctx) {
+    public void exitAtomQuantifier(SkadiRegexParser.AtomQuantifierContext ctx) {
     }
 
     /**
@@ -107,7 +107,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterUser_code(SkadiParser.User_codeContext ctx) {
+    public void enterAtomAssertion(SkadiRegexParser.AtomAssertionContext ctx) {
     }
 
     /**
@@ -116,7 +116,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitUser_code(SkadiParser.User_codeContext ctx) {
+    public void exitAtomAssertion(SkadiRegexParser.AtomAssertionContext ctx) {
     }
 
     /**
@@ -125,7 +125,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterRegex(SkadiParser.RegexContext ctx) {
+    public void enterAssertion(SkadiRegexParser.AssertionContext ctx) {
     }
 
     /**
@@ -134,7 +134,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitRegex(SkadiParser.RegexContext ctx) {
+    public void exitAssertion(SkadiRegexParser.AssertionContext ctx) {
     }
 
     /**
@@ -143,7 +143,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterInner_regex(SkadiParser.Inner_regexContext ctx) {
+    public void enterQuantifier(SkadiRegexParser.QuantifierContext ctx) {
     }
 
     /**
@@ -152,7 +152,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitInner_regex(SkadiParser.Inner_regexContext ctx) {
+    public void exitQuantifier(SkadiRegexParser.QuantifierContext ctx) {
     }
 
     /**
@@ -161,7 +161,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAlternative(SkadiParser.AlternativeContext ctx) {
+    public void enterQuantifierStar(SkadiRegexParser.QuantifierStarContext ctx) {
     }
 
     /**
@@ -170,7 +170,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAlternative(SkadiParser.AlternativeContext ctx) {
+    public void exitQuantifierStar(SkadiRegexParser.QuantifierStarContext ctx) {
     }
 
     /**
@@ -179,7 +179,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomBase(SkadiParser.AtomBaseContext ctx) {
+    public void enterQuantifierPlus(SkadiRegexParser.QuantifierPlusContext ctx) {
     }
 
     /**
@@ -188,7 +188,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomBase(SkadiParser.AtomBaseContext ctx) {
+    public void exitQuantifierPlus(SkadiRegexParser.QuantifierPlusContext ctx) {
     }
 
     /**
@@ -197,7 +197,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomQuantifier(SkadiParser.AtomQuantifierContext ctx) {
+    public void enterQuantifierQuestionMark(SkadiRegexParser.QuantifierQuestionMarkContext ctx) {
     }
 
     /**
@@ -206,7 +206,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomQuantifier(SkadiParser.AtomQuantifierContext ctx) {
+    public void exitQuantifierQuestionMark(SkadiRegexParser.QuantifierQuestionMarkContext ctx) {
     }
 
     /**
@@ -215,7 +215,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomAssertion(SkadiParser.AtomAssertionContext ctx) {
+    public void enterQuantifierExactly(SkadiRegexParser.QuantifierExactlyContext ctx) {
     }
 
     /**
@@ -224,7 +224,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomAssertion(SkadiParser.AtomAssertionContext ctx) {
+    public void exitQuantifierExactly(SkadiRegexParser.QuantifierExactlyContext ctx) {
     }
 
     /**
@@ -233,7 +233,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAssertion(SkadiParser.AssertionContext ctx) {
+    public void enterQuantifierAtLeast(SkadiRegexParser.QuantifierAtLeastContext ctx) {
     }
 
     /**
@@ -242,7 +242,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAssertion(SkadiParser.AssertionContext ctx) {
+    public void exitQuantifierAtLeast(SkadiRegexParser.QuantifierAtLeastContext ctx) {
     }
 
     /**
@@ -251,7 +251,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifier(SkadiParser.QuantifierContext ctx) {
+    public void enterQuantifierBetween(SkadiRegexParser.QuantifierBetweenContext ctx) {
     }
 
     /**
@@ -260,7 +260,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifier(SkadiParser.QuantifierContext ctx) {
+    public void exitQuantifierBetween(SkadiRegexParser.QuantifierBetweenContext ctx) {
     }
 
     /**
@@ -269,7 +269,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifierStar(SkadiParser.QuantifierStarContext ctx) {
+    public void enterAtomPatternChar(SkadiRegexParser.AtomPatternCharContext ctx) {
     }
 
     /**
@@ -278,7 +278,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifierStar(SkadiParser.QuantifierStarContext ctx) {
+    public void exitAtomPatternChar(SkadiRegexParser.AtomPatternCharContext ctx) {
     }
 
     /**
@@ -287,7 +287,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifierPlus(SkadiParser.QuantifierPlusContext ctx) {
+    public void enterAtomPeriod(SkadiRegexParser.AtomPeriodContext ctx) {
     }
 
     /**
@@ -296,7 +296,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifierPlus(SkadiParser.QuantifierPlusContext ctx) {
+    public void exitAtomPeriod(SkadiRegexParser.AtomPeriodContext ctx) {
     }
 
     /**
@@ -305,7 +305,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifierQuestionMark(SkadiParser.QuantifierQuestionMarkContext ctx) {
+    public void enterAtomAtomEscape(SkadiRegexParser.AtomAtomEscapeContext ctx) {
     }
 
     /**
@@ -314,7 +314,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifierQuestionMark(SkadiParser.QuantifierQuestionMarkContext ctx) {
+    public void exitAtomAtomEscape(SkadiRegexParser.AtomAtomEscapeContext ctx) {
     }
 
     /**
@@ -323,7 +323,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifierExactly(SkadiParser.QuantifierExactlyContext ctx) {
+    public void enterAtomCharacterClass(SkadiRegexParser.AtomCharacterClassContext ctx) {
     }
 
     /**
@@ -332,7 +332,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifierExactly(SkadiParser.QuantifierExactlyContext ctx) {
+    public void exitAtomCharacterClass(SkadiRegexParser.AtomCharacterClassContext ctx) {
     }
 
     /**
@@ -341,7 +341,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifierAtLeast(SkadiParser.QuantifierAtLeastContext ctx) {
+    public void enterAtomParenRegex(SkadiRegexParser.AtomParenRegexContext ctx) {
     }
 
     /**
@@ -350,7 +350,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifierAtLeast(SkadiParser.QuantifierAtLeastContext ctx) {
+    public void exitAtomParenRegex(SkadiRegexParser.AtomParenRegexContext ctx) {
     }
 
     /**
@@ -359,7 +359,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterQuantifierBetween(SkadiParser.QuantifierBetweenContext ctx) {
+    public void enterAtomRuleReference(SkadiRegexParser.AtomRuleReferenceContext ctx) {
     }
 
     /**
@@ -368,7 +368,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitQuantifierBetween(SkadiParser.QuantifierBetweenContext ctx) {
+    public void exitAtomRuleReference(SkadiRegexParser.AtomRuleReferenceContext ctx) {
     }
 
     /**
@@ -377,7 +377,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomPatternChar(SkadiParser.AtomPatternCharContext ctx) {
+    public void enterAtom_escape(SkadiRegexParser.Atom_escapeContext ctx) {
     }
 
     /**
@@ -386,7 +386,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomPatternChar(SkadiParser.AtomPatternCharContext ctx) {
+    public void exitAtom_escape(SkadiRegexParser.Atom_escapeContext ctx) {
     }
 
     /**
@@ -395,7 +395,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomDot(SkadiParser.AtomDotContext ctx) {
+    public void enterCharacter_escape(SkadiRegexParser.Character_escapeContext ctx) {
     }
 
     /**
@@ -404,7 +404,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomDot(SkadiParser.AtomDotContext ctx) {
+    public void exitCharacter_escape(SkadiRegexParser.Character_escapeContext ctx) {
     }
 
     /**
@@ -413,7 +413,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomAtomEscape(SkadiParser.AtomAtomEscapeContext ctx) {
+    public void enterControl_escape(SkadiRegexParser.Control_escapeContext ctx) {
     }
 
     /**
@@ -422,7 +422,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomAtomEscape(SkadiParser.AtomAtomEscapeContext ctx) {
+    public void exitControl_escape(SkadiRegexParser.Control_escapeContext ctx) {
     }
 
     /**
@@ -431,7 +431,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomCharacterClass(SkadiParser.AtomCharacterClassContext ctx) {
+    public void enterControl_letter(SkadiRegexParser.Control_letterContext ctx) {
     }
 
     /**
@@ -440,7 +440,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomCharacterClass(SkadiParser.AtomCharacterClassContext ctx) {
+    public void exitControl_letter(SkadiRegexParser.Control_letterContext ctx) {
     }
 
     /**
@@ -449,7 +449,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomParenRegex(SkadiParser.AtomParenRegexContext ctx) {
+    public void enterIdentity_escape(SkadiRegexParser.Identity_escapeContext ctx) {
     }
 
     /**
@@ -458,7 +458,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomParenRegex(SkadiParser.AtomParenRegexContext ctx) {
+    public void exitIdentity_escape(SkadiRegexParser.Identity_escapeContext ctx) {
     }
 
     /**
@@ -467,7 +467,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtomRuleReference(SkadiParser.AtomRuleReferenceContext ctx) {
+    public void enterDecimal_escape(SkadiRegexParser.Decimal_escapeContext ctx) {
     }
 
     /**
@@ -476,7 +476,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtomRuleReference(SkadiParser.AtomRuleReferenceContext ctx) {
+    public void exitDecimal_escape(SkadiRegexParser.Decimal_escapeContext ctx) {
     }
 
     /**
@@ -485,7 +485,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAtom_escape(SkadiParser.Atom_escapeContext ctx) {
+    public void enterHex_escape_sequence(SkadiRegexParser.Hex_escape_sequenceContext ctx) {
     }
 
     /**
@@ -494,7 +494,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAtom_escape(SkadiParser.Atom_escapeContext ctx) {
+    public void exitHex_escape_sequence(SkadiRegexParser.Hex_escape_sequenceContext ctx) {
     }
 
     /**
@@ -503,7 +503,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterCharacter_escape(SkadiParser.Character_escapeContext ctx) {
+    public void enterHex_digit(SkadiRegexParser.Hex_digitContext ctx) {
     }
 
     /**
@@ -512,7 +512,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitCharacter_escape(SkadiParser.Character_escapeContext ctx) {
+    public void exitHex_digit(SkadiRegexParser.Hex_digitContext ctx) {
     }
 
     /**
@@ -521,7 +521,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterControl_escape(SkadiParser.Control_escapeContext ctx) {
+    public void enterCharacter_class_escape(SkadiRegexParser.Character_class_escapeContext ctx) {
     }
 
     /**
@@ -530,7 +530,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitControl_escape(SkadiParser.Control_escapeContext ctx) {
+    public void exitCharacter_class_escape(SkadiRegexParser.Character_class_escapeContext ctx) {
     }
 
     /**
@@ -539,7 +539,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterControl_letter(SkadiParser.Control_letterContext ctx) {
+    public void enterCharacter_class(SkadiRegexParser.Character_classContext ctx) {
     }
 
     /**
@@ -548,7 +548,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitControl_letter(SkadiParser.Control_letterContext ctx) {
+    public void exitCharacter_class(SkadiRegexParser.Character_classContext ctx) {
     }
 
     /**
@@ -557,7 +557,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterIdentity_escape(SkadiParser.Identity_escapeContext ctx) {
+    public void enterClass_ranges(SkadiRegexParser.Class_rangesContext ctx) {
     }
 
     /**
@@ -566,7 +566,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitIdentity_escape(SkadiParser.Identity_escapeContext ctx) {
+    public void exitClass_ranges(SkadiRegexParser.Class_rangesContext ctx) {
     }
 
     /**
@@ -575,7 +575,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterDecimal_escape(SkadiParser.Decimal_escapeContext ctx) {
+    public void enterNon_empty_class_ranges(SkadiRegexParser.Non_empty_class_rangesContext ctx) {
     }
 
     /**
@@ -584,7 +584,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitDecimal_escape(SkadiParser.Decimal_escapeContext ctx) {
+    public void exitNon_empty_class_ranges(SkadiRegexParser.Non_empty_class_rangesContext ctx) {
     }
 
     /**
@@ -593,7 +593,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterHex_escape_sequence(SkadiParser.Hex_escape_sequenceContext ctx) {
+    public void enterNon_empty_class_ranges_no_dash(SkadiRegexParser.Non_empty_class_ranges_no_dashContext ctx) {
     }
 
     /**
@@ -602,7 +602,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitHex_escape_sequence(SkadiParser.Hex_escape_sequenceContext ctx) {
+    public void exitNon_empty_class_ranges_no_dash(SkadiRegexParser.Non_empty_class_ranges_no_dashContext ctx) {
     }
 
     /**
@@ -611,7 +611,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterHex_digit(SkadiParser.Hex_digitContext ctx) {
+    public void enterClass_atom(SkadiRegexParser.Class_atomContext ctx) {
     }
 
     /**
@@ -620,7 +620,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitHex_digit(SkadiParser.Hex_digitContext ctx) {
+    public void exitClass_atom(SkadiRegexParser.Class_atomContext ctx) {
     }
 
     /**
@@ -629,7 +629,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterCharacter_class_escape(SkadiParser.Character_class_escapeContext ctx) {
+    public void enterClass_atom_no_dash(SkadiRegexParser.Class_atom_no_dashContext ctx) {
     }
 
     /**
@@ -638,7 +638,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitCharacter_class_escape(SkadiParser.Character_class_escapeContext ctx) {
+    public void exitClass_atom_no_dash(SkadiRegexParser.Class_atom_no_dashContext ctx) {
     }
 
     /**
@@ -647,7 +647,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterCharacter_class(SkadiParser.Character_classContext ctx) {
+    public void enterClass_escape(SkadiRegexParser.Class_escapeContext ctx) {
     }
 
     /**
@@ -656,7 +656,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitCharacter_class(SkadiParser.Character_classContext ctx) {
+    public void exitClass_escape(SkadiRegexParser.Class_escapeContext ctx) {
     }
 
     /**
@@ -665,7 +665,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterClass_ranges(SkadiParser.Class_rangesContext ctx) {
+    public void enterRule_reference(SkadiRegexParser.Rule_referenceContext ctx) {
     }
 
     /**
@@ -674,7 +674,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitClass_ranges(SkadiParser.Class_rangesContext ctx) {
+    public void exitRule_reference(SkadiRegexParser.Rule_referenceContext ctx) {
     }
 
     /**
@@ -683,7 +683,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterNon_empty_class_ranges(SkadiParser.Non_empty_class_rangesContext ctx) {
+    public void enterRule_name(SkadiRegexParser.Rule_nameContext ctx) {
     }
 
     /**
@@ -692,7 +692,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitNon_empty_class_ranges(SkadiParser.Non_empty_class_rangesContext ctx) {
+    public void exitRule_name(SkadiRegexParser.Rule_nameContext ctx) {
     }
 
     /**
@@ -701,7 +701,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterNon_empty_class_ranges_no_dash(SkadiParser.Non_empty_class_ranges_no_dashContext ctx) {
+    public void enterPattern_char(SkadiRegexParser.Pattern_charContext ctx) {
     }
 
     /**
@@ -710,7 +710,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitNon_empty_class_ranges_no_dash(SkadiParser.Non_empty_class_ranges_no_dashContext ctx) {
+    public void exitPattern_char(SkadiRegexParser.Pattern_charContext ctx) {
     }
 
     /**
@@ -719,7 +719,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterClass_atom(SkadiParser.Class_atomContext ctx) {
+    public void enterDigit(SkadiRegexParser.DigitContext ctx) {
     }
 
     /**
@@ -728,7 +728,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitClass_atom(SkadiParser.Class_atomContext ctx) {
+    public void exitDigit(SkadiRegexParser.DigitContext ctx) {
     }
 
     /**
@@ -737,7 +737,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterClass_atom_no_dash(SkadiParser.Class_atom_no_dashContext ctx) {
+    public void enterChar(SkadiRegexParser.CharContext ctx) {
     }
 
     /**
@@ -746,115 +746,7 @@ public class SkadiParserBaseListener implements SkadiParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitClass_atom_no_dash(SkadiParser.Class_atom_no_dashContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterClass_escape(SkadiParser.Class_escapeContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitClass_escape(SkadiParser.Class_escapeContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterRule_reference(SkadiParser.Rule_referenceContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitRule_reference(SkadiParser.Rule_referenceContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterRule_name(SkadiParser.Rule_nameContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitRule_name(SkadiParser.Rule_nameContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterPattern_char(SkadiParser.Pattern_charContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitPattern_char(SkadiParser.Pattern_charContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterDigit(SkadiParser.DigitContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitDigit(SkadiParser.DigitContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterChar(SkadiParser.CharContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitChar(SkadiParser.CharContext ctx) {
+    public void exitChar(SkadiRegexParser.CharContext ctx) {
     }
 
     /**
