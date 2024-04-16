@@ -1,4 +1,4 @@
-package de.mrvnndr.skadi.analysis;
+package de.mrvnndr.skadi.analysis.antlr;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -132,4 +132,18 @@ public interface SkadiFileParserListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitFinish_action(SkadiFileParser.Finish_actionContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link SkadiFileParser#locator}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterLocator(SkadiFileParser.LocatorContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link SkadiFileParser#locator}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitLocator(SkadiFileParser.LocatorContext ctx);
 }

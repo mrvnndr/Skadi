@@ -1,7 +1,7 @@
 package de.mrvnndr.skadi;
 
-import de.mrvnndr.skadi.analysis.SkadiRegexLexer;
-import de.mrvnndr.skadi.analysis.SkadiRegexParser;
+import de.mrvnndr.skadi.analysis.antlr.SkadiRegexLexer;
+import de.mrvnndr.skadi.analysis.antlr.SkadiRegexParser;
 import org.antlr.v4.runtime.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

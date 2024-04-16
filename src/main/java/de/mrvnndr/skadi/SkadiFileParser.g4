@@ -34,13 +34,17 @@ action_definition
     ;
 
 enter_action
-    : ENTER automaton = ID PERIOD frag = ID CURLY_OPEN HOST_CODE* CURLY_CLOSED
+    : ENTER locator CURLY_OPEN HOST_CODE* CURLY_CLOSED
     ;
 
 progress_action
-    : PROGRESS automaton = ID PERIOD frag = ID CURLY_OPEN HOST_CODE* CURLY_CLOSED
+    : PROGRESS locator CURLY_OPEN HOST_CODE* CURLY_CLOSED
     ;
 
 finish_action
-    : FINISH automaton = ID PERIOD frag = ID CURLY_OPEN HOST_CODE* CURLY_CLOSED
+    : FINISH locator CURLY_OPEN HOST_CODE* CURLY_CLOSED
+    ;
+
+locator
+    : ID(PERIOD ID)*
     ;

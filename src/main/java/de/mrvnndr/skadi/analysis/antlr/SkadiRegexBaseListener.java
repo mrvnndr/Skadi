@@ -1,4 +1,4 @@
-package de.mrvnndr.skadi.analysis;
+package de.mrvnndr.skadi.analysis.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;

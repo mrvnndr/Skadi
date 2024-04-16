@@ -1,4 +1,4 @@
-package de.mrvnndr.skadi.analysis;
+package de.mrvnndr.skadi.analysis.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -171,6 +171,24 @@ public class SkadiFileParserBaseListener implements SkadiFileParserListener {
      */
     @Override
     public void exitFinish_action(SkadiFileParser.Finish_actionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterLocator(SkadiFileParser.LocatorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitLocator(SkadiFileParser.LocatorContext ctx) {
     }
 
     /**
