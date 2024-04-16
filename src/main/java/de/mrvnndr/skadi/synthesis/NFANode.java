@@ -1,4 +1,4 @@
-package de.mrvnndr.skadi;
+package de.mrvnndr.skadi.synthesis;
 
 import java.util.Objects;
 

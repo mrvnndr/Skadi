@@ -1,4 +1,4 @@
-package de.mrvnndr.skadi;
+package de.mrvnndr.skadi.analysis;
 
 import org.antlr.v4.runtime.Token;
 

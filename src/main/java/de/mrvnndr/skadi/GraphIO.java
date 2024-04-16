@@ -1,5 +1,7 @@
 package de.mrvnndr.skadi;
 
+import de.mrvnndr.skadi.synthesis.NFAEdge;
+import de.mrvnndr.skadi.synthesis.NFANode;
 import org.jgrapht.Graph;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;

@@ -1,8 +1,8 @@
-package de.mrvnndr.skadi;
+package de.mrvnndr.skadi.synthesis;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
-import org.jgrapht.graph.SimpleDirectedGraph;
+import org.jgrapht.graph.DefaultDirectedGraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +24,7 @@ public record ThompsonNFA(Graph<NFANode, NFAEdge> nfa, NFANode startNode, NFANod
         nfaList.add(nfa1);
         nfaList.add(nfa2);
 
-        Graph<NFANode, NFAEdge> nfa = new SimpleDirectedGraph<>(NFAEdge.class);
+        Graph<NFANode, NFAEdge> nfa = new DefaultDirectedGraph<>(NFAEdge.class);
         var nfaCopies = new ArrayList<ThompsonNFA>();
         int index = 2;
 
@@ -58,7 +58,7 @@ public record ThompsonNFA(Graph<NFANode, NFAEdge> nfa, NFANode startNode, NFANod
         var nfa1Copy = copyAndReindex(nfa1, 1);
         var nfa2Copy = copyAndReindex(nfa2, nfa1.nfa().vertexSet().size() + 1);
 
-        Graph<NFANode, NFAEdge> nfa = new SimpleDirectedGraph<>(NFAEdge.class);
+        Graph<NFANode, NFAEdge> nfa = new DefaultDirectedGraph<>(NFAEdge.class);
         Graphs.addGraph(nfa, nfa1Copy.nfa());
         Graphs.addGraph(nfa, nfa2Copy.nfa());
 
@@ -91,8 +91,32 @@ public record ThompsonNFA(Graph<NFANode, NFAEdge> nfa, NFANode startNode, NFANod
         return new ThompsonNFA(newNFA, newStart.orElseThrow(), newAccept.orElseThrow());
     }
 
+    public static ThompsonNFA wrapEpsilonFreeNFA(EpsilonFreeNFA epsilonFreeNFA) {
+        Graph<NFANode, NFAEdge> newNFA = GraphUtil.copyAndReindex(epsilonFreeNFA.getNFA(), epsilonFreeNFA.getStartState(), 3);
+        var newStart = new NFANode(1).setStart(true);
+        var newEnd = new NFANode(2).setAccepting(true);
+
+        newNFA.addVertex(newStart);
+        newNFA.addVertex(newEnd);
+
+        var startEdge = new NFAEdge(true);
+        var copyStart = newNFA.vertexSet().stream().filter(NFANode::isStart).findAny().orElseThrow();
+        newNFA.addEdge(newStart, copyStart, startEdge);
+        copyStart.setStart(false);
+
+        for (var node : newNFA.vertexSet()) {
+            if (!node.isAccepting() || node == newEnd) {
+                continue;
+            }
+            var newEdge = new NFAEdge(true);
+            newNFA.addEdge(node, newEnd, newEdge);
+            node.setAccepting(false);
+        }
+        return copyAndReindex(new ThompsonNFA(newNFA, newStart, newEnd), 1);
+    }
+
     private static ThompsonNFA simpleTransition(Collection<Character> chars, boolean epsilon) {
-        Graph<NFANode, NFAEdge> nfa = new SimpleDirectedGraph<>(NFAEdge.class);
+        Graph<NFANode, NFAEdge> nfa = new DefaultDirectedGraph<>(NFAEdge.class);
         var nodeStart = new NFANode(1).setStart(true);
         var nodeEnd = new NFANode(2).setAccepting(true);
 

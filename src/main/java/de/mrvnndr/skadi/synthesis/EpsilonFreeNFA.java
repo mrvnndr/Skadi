@@ -1,16 +1,24 @@
-package de.mrvnndr.skadi;
+package de.mrvnndr.skadi.synthesis;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record EpsilonFreeNFA(Graph<NFANode, NFAEdge> nfa, NFANode startState, Set<NFANode> acceptStates) {
+public class EpsilonFreeNFA {
 
-    public static EpsilonFreeNFA fromThompsonNFA(ThompsonNFA thompsonNFA) throws IOException {
+    private final Graph<NFANode, NFAEdge> nfa;
+    private final NFANode startState;
+    private final Set<NFANode> acceptStates;
+
+    private EpsilonFreeNFA(Graph<NFANode, NFAEdge> nfa, NFANode startState, Set<NFANode> acceptStates) {
+        this.nfa = nfa;
+        this.startState = startState;
+        this.acceptStates = acceptStates;
+    }
+
+    public static EpsilonFreeNFA fromThompsonNFA(ThompsonNFA thompsonNFA) {
         var currentGraph = GraphUtil.copyAndReindex(thompsonNFA.nfa(), thompsonNFA.startNode(), 1);
         boolean addedEpsilonEdge;
         NFANode startState;
@@ -23,7 +31,6 @@ public record EpsilonFreeNFA(Graph<NFANode, NFAEdge> nfa, NFANode startState, Se
             cleanUnreachableStates(newNFA);
 
             startState = newNFA.vertexSet().stream().filter(NFANode::isStart).findAny().orElseThrow();
-            GraphIO.exportNFAToDOT(new FileWriter("graph.dot"), newNFA);
             currentGraph = GraphUtil.copyAndReindex(newNFA, startState, 1);
         } while (addedEpsilonEdge);
 
@@ -49,6 +56,7 @@ public record EpsilonFreeNFA(Graph<NFANode, NFAEdge> nfa, NFANode startState, Se
                 addedEpsilonEdge = isEpsilon || addedEpsilonEdge;
                 var newEdge = new NFAEdge(isEpsilon);
                 newEdge.insertAll(outgoingEdge.getChars());
+                outgoingEdge.getActions().forEach(newEdge::addAction);
                 output.addEdge(source, input.getEdgeTarget(outgoingEdge), newEdge);
             }
 
@@ -69,5 +77,17 @@ public record EpsilonFreeNFA(Graph<NFANode, NFAEdge> nfa, NFANode startState, Se
                 break;
             }
         }
+    }
+
+    public Graph<NFANode, NFAEdge> getNFA() {
+        return nfa;
+    }
+
+    public NFANode getStartState() {
+        return startState;
+    }
+
+    public Set<NFANode> getAcceptStates() {
+        return acceptStates;
     }
 }

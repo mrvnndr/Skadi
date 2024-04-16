@@ -1,8 +1,10 @@
-package de.mrvnndr.skadi.analysis;
+package de.mrvnndr.skadi.synthesis;
 
-import de.mrvnndr.skadi.Quantifier;
-import de.mrvnndr.skadi.SemanticAnalysisException;
-import de.mrvnndr.skadi.ThompsonNFA;
+import de.mrvnndr.skadi.analysis.ActionLocator;
+import de.mrvnndr.skadi.analysis.Quantifier;
+import de.mrvnndr.skadi.analysis.SemanticAnalysisException;
+import de.mrvnndr.skadi.analysis.antlr.SkadiRegexBaseListener;
+import de.mrvnndr.skadi.analysis.antlr.SkadiRegexParser;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
@@ -15,10 +17,20 @@ public class NFABuildListener extends SkadiRegexBaseListener {
     private final ParseTreeProperty<ThompsonNFA> nfaFragments = new ParseTreeProperty<>();
     private final ParseTreeProperty<Quantifier> quantifiers = new ParseTreeProperty<>();
     private final ParseTreeProperty<Set<Character>> chars = new ParseTreeProperty<>();
-    private final Map<String, ThompsonNFA> idNFAMap = new HashMap<>();
 
-    public ParseTreeProperty<ThompsonNFA> getNfaFragments() {
-        return nfaFragments;
+    private final ActionLocator currentLocator;
+    private final Map<ActionLocator, ThompsonNFA> builtFragments;
+
+    private ThompsonNFA result = null;
+
+    public NFABuildListener(ActionLocator currentLocator, Map<ActionLocator, ThompsonNFA> builtFragments) {
+        this.currentLocator = currentLocator;
+        this.builtFragments = builtFragments;
+    }
+
+    public ThompsonNFA getResult() {
+        Objects.requireNonNull(result);
+        return result;
     }
 
     @Override
@@ -26,6 +38,7 @@ public class NFABuildListener extends SkadiRegexBaseListener {
         var alternatives = ctx.alternative();
         var nfa = analyzeRegex(alternatives);
         nfaFragments.put(ctx, nfa);
+        result = nfa;
     }
 
     @Override
@@ -228,13 +241,14 @@ public class NFABuildListener extends SkadiRegexBaseListener {
 
     @Override
     public void exitAtomRuleReference(SkadiRegexParser.AtomRuleReferenceContext ctx) {
-        var result = idNFAMap.get(ctx.rule_reference().rule_name().getText());
+        var ruleName = ctx.rule_reference().rule_name().getText();
+        var ruleLocator = new ActionLocator(List.of(ruleName)).withPrefix(currentLocator);
 
-        if (result == null) {
-            throw new SemanticAnalysisException("Unknown definition!", ctx.start);
+        if (!builtFragments.containsKey(ruleLocator)) {
+            throw new SemanticAnalysisException("Unknown rule " + ruleName + "!");
         }
 
-        nfaFragments.put(ctx, result);
+        nfaFragments.put(ctx, builtFragments.get(ruleLocator));
     }
 
     @Override

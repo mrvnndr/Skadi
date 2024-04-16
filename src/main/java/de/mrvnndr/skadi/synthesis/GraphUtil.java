@@ -1,4 +1,4 @@
-package de.mrvnndr.skadi;
+package de.mrvnndr.skadi.synthesis;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.builder.GraphTypeBuilder;
@@ -29,6 +29,7 @@ public class GraphUtil {
         for (var oldEdge : nfa.edgeSet()) {
             var newEdge = new NFAEdge(oldEdge.isEpsilon());
             newEdge.insertAll(oldEdge.getChars());
+            oldEdge.getActions().forEach(newEdge::addAction);
 
             var oldSource = nfa.getEdgeSource(oldEdge);
             var oldTarget = nfa.getEdgeTarget(oldEdge);
