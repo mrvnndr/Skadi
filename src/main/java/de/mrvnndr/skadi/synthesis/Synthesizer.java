@@ -13,10 +13,12 @@ import java.util.*;
 public class Synthesizer {
 
     public static SynthesisResult synthesize(InputFile inputFile) {
-        var automatonMap = inputFile.getAutomatonMap();
+        var automatonMap = inputFile.automatonMap();
 
         for (var automatonName : automatonMap.keySet()) {
             var nfa = buildAutomaton(automatonName, inputFile);
+
+            //Todo: remove
             System.out.println(JavaSynthesis.synthesize(nfa));
             try {
                 GraphIO.exportNFAToDOT(new FileWriter("graph.dot"), nfa.getNFA());
@@ -64,8 +66,8 @@ public class Synthesizer {
     }
 
     private static Map<String, ParsedRegex> buildMergedRegexMap(InputFile inputFile) {
-        var automatonMap = inputFile.getAutomatonMap();
-        var fragmentMap = inputFile.getFragmentMap();
+        var automatonMap = inputFile.automatonMap();
+        var fragmentMap = inputFile.fragmentMap();
 
         var regexMap = new HashMap<String, ParsedRegex>();
         regexMap.putAll(automatonMap);
@@ -75,9 +77,9 @@ public class Synthesizer {
     }
 
     private static List<ActionLocator> createAutomatonBuildOrder(String automatonName, InputFile inputFile) {
-        var automatonRegex = inputFile.getAutomatonMap().get(automatonName);
+        var automatonRegex = inputFile.automatonMap().get(automatonName);
         var baseLocator = new ActionLocator(automatonName);
-        var allLocators = buildAllLocators(baseLocator, automatonRegex, inputFile.getFragmentMap());
+        var allLocators = buildAllLocators(baseLocator, automatonRegex, inputFile.fragmentMap());
         return allLocators.stream()
                 .sorted(Comparator.comparingInt(ActionLocator::getSize))
                 .toList()

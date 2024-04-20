@@ -12,6 +12,7 @@ definition
     : copy_definition
     | fragment_definition
     | automaton_definition
+    | embed_definition
     | action_definition
     ;
 
@@ -25,6 +26,14 @@ fragment_definition
 
 automaton_definition
     : AUTOMATON ID EQUAL REGEX
+    ;
+
+embed_definition
+    : EMBED embed_pair (COMMA embed_pair)* IN CURLY_OPEN HOST_CODE* CURLY_CLOSED
+    ;
+
+embed_pair
+    : ID AT ID
     ;
 
 action_definition

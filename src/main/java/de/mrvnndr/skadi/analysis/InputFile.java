@@ -1,37 +1,27 @@
 package de.mrvnndr.skadi.analysis;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class InputFile {
-    private final Map<String, ParsedRegex> fragmentMap;
-    private final Map<String, ParsedRegex> automatonMap;
-    private final List<String> copySequences;
-    private final List<Action> actions;
+public record InputFile(Map<String, ParsedRegex> fragmentMap, Map<String, ParsedRegex> automatonMap,
+                        List<String> copySequences, List<Action> actions, Set<Embedding> embeddings) {
 
     public InputFile(Map<String, ParsedRegex> fragmentMap, Map<String, ParsedRegex> automatonMap,
-                     List<String> copySequences, List<Action> actions) {
+                     List<String> copySequences, List<Action> actions, Set<Embedding> embeddings) {
         this.fragmentMap = fragmentMap;
         this.automatonMap = automatonMap;
         this.copySequences = List.copyOf(copySequences);
         this.actions = List.copyOf(actions);
+        this.embeddings = Set.copyOf(embeddings);
     }
 
-    public Map<String, ParsedRegex> getFragmentMap() {
+    @Override
+    public Map<String, ParsedRegex> fragmentMap() {
         return Collections.unmodifiableMap(fragmentMap);
     }
 
-    public Map<String, ParsedRegex> getAutomatonMap() {
+    @Override
+    public Map<String, ParsedRegex> automatonMap() {
         return Collections.unmodifiableMap(automatonMap);
-    }
-
-    public List<String> getCopySequences() {
-        return copySequences;
-    }
-
-    public List<Action> getActions() {
-        return actions;
     }
 
     public List<Action> getMatchingActions(ActionLocator locator) {

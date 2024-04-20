@@ -12,10 +12,14 @@ AUTOMATON : 'automaton';
 ENTER     : 'enter';
 PROGRESS  : 'progress';
 FINISH    : 'finish';
+EMBED     : 'embed';
+AT        : 'at';
+IN        : 'in';
 
 CURLY_OPEN : '{' -> pushMode(CODE);
 EQUAL      : '=';
 PERIOD     : '.';
+COMMA      : ',';
 ID         : [_a-zA-Z][_a-zA-Z0-9]*;
 WS         : [ \t\r\n]+ -> skip;
 

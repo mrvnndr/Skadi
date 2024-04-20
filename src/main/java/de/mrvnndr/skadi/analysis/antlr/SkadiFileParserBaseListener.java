@@ -107,6 +107,42 @@ public class SkadiFileParserBaseListener implements SkadiFileParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterEmbed_definition(SkadiFileParser.Embed_definitionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitEmbed_definition(SkadiFileParser.Embed_definitionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterEmbed_pair(SkadiFileParser.Embed_pairContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitEmbed_pair(SkadiFileParser.Embed_pairContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterAction_definition(SkadiFileParser.Action_definitionContext ctx) {
     }
 

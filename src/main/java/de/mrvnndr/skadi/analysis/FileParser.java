@@ -16,13 +16,15 @@ public class FileParser extends SkadiFileParserBaseListener {
     private final Map<String, ParsedRegex> fragmentIdRegexMap = new HashMap<>();
     private final Map<String, ParsedRegex> automatonIdRegexMap = new HashMap<>();
     private final ParseTreeProperty<ActionLocator> locators = new ParseTreeProperty<>();
+    private final ParseTreeProperty<EmbedPair> embedPairs = new ParseTreeProperty<>();
     private final List<String> copySequences = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
+    private final Set<Embedding> embeddings = new HashSet<>();
 
     private int actionIndex = 1;
 
     public InputFile getResult() {
-        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, copySequences, actions);
+        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, copySequences, actions, embeddings);
     }
 
     @Override
@@ -65,6 +67,19 @@ public class FileParser extends SkadiFileParserBaseListener {
         var parser = new SkadiRegexParser(tokenStream);
 
         return parser.regex();
+    }
+
+    @Override
+    public void exitEmbed_definition(SkadiFileParser.Embed_definitionContext ctx) {
+        var pairs = ctx.embed_pair().stream().map(embedPairs::get).collect(Collectors.toSet());
+        var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
+        embeddings.add(new Embedding(code.trim(), pairs));
+    }
+
+    @Override
+    public void exitEmbed_pair(SkadiFileParser.Embed_pairContext ctx) {
+        var pair = new EmbedPair(ctx.ID(0).getText(), ctx.ID(1).getText());
+        embedPairs.put(ctx, pair);
     }
 
     @Override
