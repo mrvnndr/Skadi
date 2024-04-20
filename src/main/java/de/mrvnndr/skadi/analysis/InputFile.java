@@ -3,15 +3,14 @@ package de.mrvnndr.skadi.analysis;
 import java.util.*;
 
 public record InputFile(Map<String, ParsedRegex> fragmentMap, Map<String, ParsedRegex> automatonMap,
-                        List<String> copySequences, List<Action> actions, Set<Embedding> embeddings) {
+                        List<Action> actions, List<Embedding> embeddings) {
 
     public InputFile(Map<String, ParsedRegex> fragmentMap, Map<String, ParsedRegex> automatonMap,
-                     List<String> copySequences, List<Action> actions, Set<Embedding> embeddings) {
+                     List<Action> actions, List<Embedding> embeddings) {
         this.fragmentMap = fragmentMap;
         this.automatonMap = automatonMap;
-        this.copySequences = List.copyOf(copySequences);
         this.actions = List.copyOf(actions);
-        this.embeddings = Set.copyOf(embeddings);
+        this.embeddings = List.copyOf(embeddings);
     }
 
     @Override

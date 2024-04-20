@@ -17,19 +17,19 @@ public class FileParser extends SkadiFileParserBaseListener {
     private final Map<String, ParsedRegex> automatonIdRegexMap = new HashMap<>();
     private final ParseTreeProperty<ActionLocator> locators = new ParseTreeProperty<>();
     private final ParseTreeProperty<EmbedPair> embedPairs = new ParseTreeProperty<>();
-    private final List<String> copySequences = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
-    private final Set<Embedding> embeddings = new HashSet<>();
+    private final List<Embedding> embeddings = new ArrayList<>();
 
     private int actionIndex = 1;
 
     public InputFile getResult() {
-        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, copySequences, actions, embeddings);
+        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, actions, embeddings);
     }
 
     @Override
     public void exitCopy_definition(SkadiFileParser.Copy_definitionContext ctx) {
-        ctx.HOST_CODE().forEach(h -> copySequences.add(h.getText()));
+        var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
+        embeddings.add(new Embedding(code.trim(), Collections.emptySet()));
     }
 
     @Override
