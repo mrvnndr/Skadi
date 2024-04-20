@@ -68,9 +68,21 @@ public class FileParser extends SkadiFileParserBaseListener {
     }
 
     @Override
+    public void exitEnter_action(SkadiFileParser.Enter_actionContext ctx) {
+        var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
+        actions.add(new EnterAction(code.trim(), locators.get(ctx.locator()), actionIndex++));
+    }
+
+    @Override
     public void exitProgress_action(SkadiFileParser.Progress_actionContext ctx) {
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
         actions.add(new ProgressAction(code.trim(), locators.get(ctx.locator()), actionIndex++));
+    }
+
+    @Override
+    public void exitFinish_action(SkadiFileParser.Finish_actionContext ctx) {
+        var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
+        actions.add(new FinishAction(code.trim(), locators.get(ctx.locator()), actionIndex++));
     }
 
     @Override
