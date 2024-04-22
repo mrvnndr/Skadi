@@ -7,12 +7,12 @@ import java.util.*;
 public class NFAEdge {
     private final boolean isEpsilon;
     private final TreeSet<Character> chars;
-    private final Set<Action> actions;
+    private final List<Action> actions;
 
     public NFAEdge(boolean isEpsilon) {
         this.isEpsilon = isEpsilon;
         this.chars = new TreeSet<>();
-        this.actions = new HashSet<>();
+        this.actions = new ArrayList<>();
     }
 
     public void insertChar(char c) {
@@ -35,10 +35,13 @@ public class NFAEdge {
         if (this.isEpsilon) {
             throw new IllegalStateException("Cannot add an action to an epsilon edge");
         }
+        if (this.actions.contains(action)) {
+            throw new IllegalStateException("Cannot add an action multiple times to an epsilon edge");
+        }
         actions.add(action);
     }
 
-    public Set<Action> getActions() {
-        return Collections.unmodifiableSet(actions);
+    public List<Action> getActions() {
+        return Collections.unmodifiableList(actions);
     }
 }

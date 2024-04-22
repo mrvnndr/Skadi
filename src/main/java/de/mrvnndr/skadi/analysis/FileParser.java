@@ -29,7 +29,7 @@ public class FileParser extends SkadiFileParserBaseListener {
     @Override
     public void exitCopy_definition(SkadiFileParser.Copy_definitionContext ctx) {
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        embeddings.add(new Embedding(code.trim(), Collections.emptySet()));
+        embeddings.add(new Embedding(code, Collections.emptySet()));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FileParser extends SkadiFileParserBaseListener {
     public void exitEmbed_definition(SkadiFileParser.Embed_definitionContext ctx) {
         var pairs = ctx.embed_pair().stream().map(embedPairs::get).collect(Collectors.toSet());
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        embeddings.add(new Embedding(code.trim(), pairs));
+        embeddings.add(new Embedding(code, pairs));
     }
 
     @Override
@@ -85,19 +85,19 @@ public class FileParser extends SkadiFileParserBaseListener {
     @Override
     public void exitEnter_action(SkadiFileParser.Enter_actionContext ctx) {
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        actions.add(new EnterAction(code.trim(), locators.get(ctx.locator()), actionIndex++));
+        actions.add(new EnterAction(code, locators.get(ctx.locator()), actionIndex++));
     }
 
     @Override
     public void exitProgress_action(SkadiFileParser.Progress_actionContext ctx) {
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        actions.add(new ProgressAction(code.trim(), locators.get(ctx.locator()), actionIndex++));
+        actions.add(new ProgressAction(code, locators.get(ctx.locator()), actionIndex++));
     }
 
     @Override
     public void exitFinish_action(SkadiFileParser.Finish_actionContext ctx) {
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        actions.add(new FinishAction(code.trim(), locators.get(ctx.locator()), actionIndex++));
+        actions.add(new FinishAction(code, locators.get(ctx.locator()), actionIndex++));
     }
 
     @Override
