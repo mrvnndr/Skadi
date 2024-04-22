@@ -1,32 +1,23 @@
 package de.mrvnndr.skadi.synthesis;
 
-import de.mrvnndr.skadi.GraphIO;
 import de.mrvnndr.skadi.analysis.ActionLocator;
 import de.mrvnndr.skadi.analysis.FragmentDependencyParser;
 import de.mrvnndr.skadi.analysis.InputFile;
 import de.mrvnndr.skadi.analysis.ParsedRegex;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 public class Synthesizer {
 
     public static SynthesisResult synthesize(InputFile inputFile) {
         var automatonMap = inputFile.automatonMap();
+        var resultMap = new HashMap<String, EpsilonFreeNFA>();
 
         for (var automatonName : automatonMap.keySet()) {
             var nfa = buildAutomaton(automatonName, inputFile);
-
-            //Todo: remove
-            System.out.println(JavaSynthesis.synthesize(nfa));
-            try {
-                GraphIO.exportNFAToDOT(new FileWriter("graph.dot"), nfa.getNFA());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            resultMap.put(automatonName, nfa);
         }
-        return new SynthesisResult();
+        return new SynthesisResult(inputFile.embeddings(), resultMap);
     }
 
     private static ThompsonNFA buildRawAutomaton(String automatonName, InputFile inputFile) {
