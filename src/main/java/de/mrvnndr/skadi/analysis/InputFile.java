@@ -3,24 +3,15 @@ package de.mrvnndr.skadi.analysis;
 import java.util.*;
 
 public record InputFile(Map<String, ParsedRegex> fragmentMap, Map<String, ParsedRegex> automatonMap,
-                        List<Action> actions, List<Embedding> embeddings) {
+                        List<Action> actions, List<EmbedTarget> embedTargets, Map<String, Embedding> embeddings) {
 
     public InputFile(Map<String, ParsedRegex> fragmentMap, Map<String, ParsedRegex> automatonMap,
-                     List<Action> actions, List<Embedding> embeddings) {
-        this.fragmentMap = fragmentMap;
-        this.automatonMap = automatonMap;
+                     List<Action> actions, List<EmbedTarget> embedTargets, Map<String, Embedding> embeddings) {
+        this.fragmentMap = Map.copyOf(fragmentMap);
+        this.automatonMap = Map.copyOf(automatonMap);
         this.actions = List.copyOf(actions);
-        this.embeddings = List.copyOf(embeddings);
-    }
-
-    @Override
-    public Map<String, ParsedRegex> fragmentMap() {
-        return Collections.unmodifiableMap(fragmentMap);
-    }
-
-    @Override
-    public Map<String, ParsedRegex> automatonMap() {
-        return Collections.unmodifiableMap(automatonMap);
+        this.embedTargets = List.copyOf(embedTargets);
+        this.embeddings = Map.copyOf(embeddings);
     }
 
     public List<Action> getMatchingActions(ActionLocator locator) {

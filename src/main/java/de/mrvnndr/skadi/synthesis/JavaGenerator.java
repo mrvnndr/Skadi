@@ -1,5 +1,7 @@
 package de.mrvnndr.skadi.synthesis;
 
+import de.mrvnndr.skadi.analysis.EmbedTarget;
+
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -7,18 +9,40 @@ public class JavaGenerator {
 
     public static String generate(SynthesisResult synthesisResult) {
         var sb = new StringBuilder();
-        for (var emb : synthesisResult.embeddings()) {
-            var currentCode = normalizeIndent(emb.embeddableCode());
-            for (var replacement : emb.embedPairs()) {
-                var indentation = getTokenIndentation(emb.embeddableCode(), replacement.embedToken());
-                var automaton = synthesisResult.automatons().get(replacement.automatonID());
-                var automatonCode = generateAutomatonCode(automaton).indent(indentation);
-                currentCode = currentCode.replaceFirst("[ \\t]*" + replacement.embedToken(),
-                        Matcher.quoteReplacement(automatonCode));
-            }
-            sb.append(currentCode).append(System.lineSeparator()).append(System.lineSeparator());
+        for (var emb : synthesisResult.embedTargets()) {
+            sb.append(generateEmbed(emb, synthesisResult));
+            sb.append("\n\n");
         }
         return sb.toString();
+    }
+
+    private static String generateEmbed(EmbedTarget embedTarget, SynthesisResult synthesisResult) {
+        var code = CodeUtil.normalizeIndent(embedTarget.embeddableCode());
+
+        for (var embeddingID : embedTarget.embeddingIDs()) {
+            var embedding = synthesisResult.embeddings().get(embeddingID);
+            var replacement = embedding.optionMap().get("token");
+
+            if (replacement == null) {
+                var msg = "Embedding %s does not define replacement token!".formatted(embeddingID);
+                throw new GenerationException(msg);
+            }
+
+            var automatonID = embedding.optionMap().get("regex");
+
+            if (automatonID == null) {
+                var msg = "Embedding %s does not define regular expression!".formatted(embeddingID);
+                throw new GenerationException(msg);
+            }
+
+            var indentation = CodeUtil.getTokenIndentation(embedTarget.embeddableCode(), replacement);
+            var automaton = synthesisResult.automatons().get(automatonID);
+            var automatonCode = generateAutomatonCode(automaton).indent(indentation);
+
+            code = code.replaceFirst("[ \\t]*" + replacement, Matcher.quoteReplacement(automatonCode));
+        }
+
+        return code;
     }
 
     private static String generateAutomatonCode(EpsilonFreeNFA nfa) {
@@ -40,7 +64,7 @@ public class JavaGenerator {
                 sb.append(addEdge.indent(12));
 
                 for (var action : edge.getActions()) {
-                    var actionCode = normalizeIndent(action.getCode());
+                    var actionCode = CodeUtil.normalizeIndent(action.getCode());
                     sb.append(actionCode.indent(12));
                 }
 
@@ -58,27 +82,6 @@ public class JavaGenerator {
 
     private static String generateTransitionCondition(NFAEdge edge) {
         return edge.getChars().stream().map(c -> "c == " + escapeChar(c)).collect(Collectors.joining(" || "));
-    }
-
-    private static String normalizeIndent(String text) {
-        text = text.stripTrailing();
-        text = text.lines()
-                .dropWhile(String::isBlank)
-                .collect(Collectors.joining(System.lineSeparator()));
-        return text.stripIndent();
-    }
-
-    private static int getTokenIndentation(String text, String token) {
-        var index = text.indexOf(token);
-        int wscount = 0;
-        for (int i = index - 1; i >= 0; i--) {
-            var c = text.charAt(i);
-            if (c != ' ' && c != '\t') {
-                break;
-            }
-            wscount++;
-        }
-        return wscount;
     }
 
     private static String escapeChar(char c) {

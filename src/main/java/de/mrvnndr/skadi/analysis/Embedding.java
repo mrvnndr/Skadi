@@ -1,12 +1,12 @@
 package de.mrvnndr.skadi.analysis;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 
-public record Embedding(String embeddableCode, Set<EmbedPair> embedPairs) {
+public record Embedding(String embeddingID, Map<String, String> optionMap) {
 
-    @Override
-    public Set<EmbedPair> embedPairs() {
-        return Collections.unmodifiableSet(embedPairs);
+    public Embedding(String embeddingID, Map<String, String> optionMap) {
+        this.embeddingID = embeddingID;
+        this.optionMap = Collections.unmodifiableMap(optionMap);
     }
 }

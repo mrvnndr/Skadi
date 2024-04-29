@@ -16,20 +16,20 @@ public class FileParser extends SkadiFileParserBaseListener {
     private final Map<String, ParsedRegex> fragmentIdRegexMap = new HashMap<>();
     private final Map<String, ParsedRegex> automatonIdRegexMap = new HashMap<>();
     private final ParseTreeProperty<ActionLocator> locators = new ParseTreeProperty<>();
-    private final ParseTreeProperty<EmbedPair> embedPairs = new ParseTreeProperty<>();
     private final List<Action> actions = new ArrayList<>();
-    private final List<Embedding> embeddings = new ArrayList<>();
+    private final Map<String, Embedding> embeddings = new HashMap<>();
+    private final List<EmbedTarget> embedTargets = new ArrayList<>();
 
     private int actionIndex = 1;
 
     public InputFile getResult() {
-        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, actions, embeddings);
+        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, actions, embedTargets, embeddings);
     }
 
     @Override
     public void exitCopy_definition(SkadiFileParser.Copy_definitionContext ctx) {
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        embeddings.add(new Embedding(code, Collections.emptySet()));
+        embedTargets.add(new EmbedTarget(code, Collections.emptySet()));
     }
 
     @Override
@@ -71,15 +71,25 @@ public class FileParser extends SkadiFileParserBaseListener {
 
     @Override
     public void exitEmbed_definition(SkadiFileParser.Embed_definitionContext ctx) {
-        var pairs = ctx.embed_pair().stream().map(embedPairs::get).collect(Collectors.toSet());
+        var embeddingIDs = ctx.ID().stream().map(ParseTree::getText).collect(Collectors.toSet());
         var code = ctx.HOST_CODE().stream().map(ParseTree::getText).collect(Collectors.joining());
-        embeddings.add(new Embedding(code, pairs));
+        embedTargets.add(new EmbedTarget(code, embeddingIDs));
     }
 
     @Override
-    public void exitEmbed_pair(SkadiFileParser.Embed_pairContext ctx) {
-        var pair = new EmbedPair(ctx.ID(0).getText(), ctx.ID(1).getText());
-        embedPairs.put(ctx, pair);
+    public void exitEmbedding_definition(SkadiFileParser.Embedding_definitionContext ctx) {
+        var kvMap = new HashMap<String, String>();
+        var id = ctx.ID().getText();
+
+        ctx.embedding_key_value().forEach(kv -> {
+            kvMap.put(kv.ID(0).getText(), kv.ID(1).getText());
+        });
+
+        if (embeddings.containsKey(id)) {
+            throw new SemanticAnalysisException("Multiple definitions of embedding " + id + "!");
+        }
+
+        embeddings.put(id, new Embedding(id, kvMap));
     }
 
     @Override

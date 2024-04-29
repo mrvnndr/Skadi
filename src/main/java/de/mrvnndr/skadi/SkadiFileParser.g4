@@ -12,6 +12,7 @@ definition
     : copy_definition
     | fragment_definition
     | automaton_definition
+    | embedding_definition
     | embed_definition
     | action_definition
     ;
@@ -28,12 +29,16 @@ automaton_definition
     : AUTOMATON ID EQUAL REGEX
     ;
 
-embed_definition
-    : EMBED embed_pair (COMMA embed_pair)* IN CURLY_OPEN HOST_CODE* CURLY_CLOSED
+embedding_definition
+    : EMBEDDING ID PAREN_OPEN embedding_key_value (COMMA embedding_key_value)* PAREN_CLOSE
     ;
 
-embed_pair
-    : ID AT ID
+embedding_key_value
+    : ID COLON ID
+    ;
+
+embed_definition
+    : EMBED ID (COMMA ID)* IN CURLY_OPEN HOST_CODE* CURLY_CLOSED
     ;
 
 action_definition

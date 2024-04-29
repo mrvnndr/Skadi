@@ -78,6 +78,34 @@ public interface SkadiFileParserListener extends ParseTreeListener {
     void exitAutomaton_definition(SkadiFileParser.Automaton_definitionContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link SkadiFileParser#embedding_definition}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterEmbedding_definition(SkadiFileParser.Embedding_definitionContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link SkadiFileParser#embedding_definition}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitEmbedding_definition(SkadiFileParser.Embedding_definitionContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link SkadiFileParser#embedding_key_value}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterEmbedding_key_value(SkadiFileParser.Embedding_key_valueContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link SkadiFileParser#embedding_key_value}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitEmbedding_key_value(SkadiFileParser.Embedding_key_valueContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link SkadiFileParser#embed_definition}.
      *
      * @param ctx the parse tree
@@ -90,20 +118,6 @@ public interface SkadiFileParserListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitEmbed_definition(SkadiFileParser.Embed_definitionContext ctx);
-
-    /**
-     * Enter a parse tree produced by {@link SkadiFileParser#embed_pair}.
-     *
-     * @param ctx the parse tree
-     */
-    void enterEmbed_pair(SkadiFileParser.Embed_pairContext ctx);
-
-    /**
-     * Exit a parse tree produced by {@link SkadiFileParser#embed_pair}.
-     *
-     * @param ctx the parse tree
-     */
-    void exitEmbed_pair(SkadiFileParser.Embed_pairContext ctx);
 
     /**
      * Enter a parse tree produced by {@link SkadiFileParser#action_definition}.

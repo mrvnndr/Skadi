@@ -25,6 +25,10 @@ public abstract class Action {
 
     public abstract void apply(EpsilonFreeNFA nfa);
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -17,7 +17,7 @@ public class Synthesizer {
             var nfa = buildAutomaton(automatonName, inputFile);
             resultMap.put(automatonName, nfa);
         }
-        return new SynthesisResult(inputFile.embeddings(), resultMap);
+        return new SynthesisResult(inputFile.embedTargets(), inputFile.embeddings(), resultMap);
     }
 
     private static ThompsonNFA buildRawAutomaton(String automatonName, InputFile inputFile) {
