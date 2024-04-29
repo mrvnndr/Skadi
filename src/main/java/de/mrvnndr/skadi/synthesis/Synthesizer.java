@@ -108,7 +108,7 @@ public class Synthesizer {
 
     private static ThompsonNFA buildLocatorNFA(ActionLocator locator, ParsedRegex regex,
                                                Map<ActionLocator, ThompsonNFA> builtFragments) {
-        var buildListener = new NFABuildListener(locator, builtFragments);
+        var buildListener = new RegexNFABuilder(locator, builtFragments);
         regex.walkTree(buildListener);
         return buildListener.getResult();
     }

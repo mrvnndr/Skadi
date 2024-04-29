@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class NFABuildListener extends SkadiRegexBaseListener {
+public class RegexNFABuilder extends SkadiRegexBaseListener {
     private final ParseTreeProperty<ThompsonNFA> nfaFragments = new ParseTreeProperty<>();
     private final ParseTreeProperty<Quantifier> quantifiers = new ParseTreeProperty<>();
     private final ParseTreeProperty<Set<Character>> chars = new ParseTreeProperty<>();
@@ -23,7 +23,7 @@ public class NFABuildListener extends SkadiRegexBaseListener {
 
     private ThompsonNFA result = null;
 
-    public NFABuildListener(ActionLocator currentLocator, Map<ActionLocator, ThompsonNFA> builtFragments) {
+    public RegexNFABuilder(ActionLocator currentLocator, Map<ActionLocator, ThompsonNFA> builtFragments) {
         this.currentLocator = currentLocator;
         this.builtFragments = builtFragments;
     }
