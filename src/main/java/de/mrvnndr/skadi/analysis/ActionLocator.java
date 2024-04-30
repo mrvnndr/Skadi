@@ -39,6 +39,10 @@ public class ActionLocator {
         return path.getFirst();
     }
 
+    public List<String> getPath() {
+        return path;
+    }
+
     public int getSize() {
         return path.size();
     }
