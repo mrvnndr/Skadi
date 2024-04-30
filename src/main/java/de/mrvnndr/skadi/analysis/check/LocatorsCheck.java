@@ -2,12 +2,10 @@ package de.mrvnndr.skadi.analysis.check;
 
 import de.mrvnndr.skadi.ConsoleUtil;
 import de.mrvnndr.skadi.analysis.Action;
-import de.mrvnndr.skadi.analysis.FragmentDependencyParser;
 import de.mrvnndr.skadi.analysis.InputFile;
 import de.mrvnndr.skadi.analysis.ParsedRegex;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class LocatorsCheck implements SemanticCheck {
 
@@ -64,7 +62,7 @@ public class LocatorsCheck implements SemanticCheck {
         for (var locator : locators) {
             var path = locator.getPath();
             for (var i = 0; i < path.size() - 1; i++) {
-                var deps = getDependenciesOfRegex(unifiedMap.get(path.get(i)));
+                var deps = unifiedMap.get(path.get(i)).getDependencies();
                 if (!deps.contains(path.get(i + 1))) {
                     var msg = "In locator '%s': '%s' does not use fragment '%s'!"
                             .formatted(locator.toString(), path.get(i), path.get(i + 1));
@@ -75,11 +73,5 @@ public class LocatorsCheck implements SemanticCheck {
             }
         }
         return result;
-    }
-
-    private static Set<String> getDependenciesOfRegex(ParsedRegex regex) {
-        var depParser = new FragmentDependencyParser();
-        regex.walkTree(depParser);
-        return depParser.getDependencies();
     }
 }

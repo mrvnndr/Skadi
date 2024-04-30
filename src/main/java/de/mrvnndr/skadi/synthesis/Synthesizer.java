@@ -1,7 +1,6 @@
 package de.mrvnndr.skadi.synthesis;
 
 import de.mrvnndr.skadi.analysis.ActionLocator;
-import de.mrvnndr.skadi.analysis.FragmentDependencyParser;
 import de.mrvnndr.skadi.analysis.InputFile;
 import de.mrvnndr.skadi.analysis.ParsedRegex;
 
@@ -92,12 +91,7 @@ public class Synthesizer {
 
             result.add(locator);
 
-            var depParser = new FragmentDependencyParser();
-            regex.walkTree(depParser);
-            var deps = depParser.getDependencies();
-
-            for (var dep : deps) {
-                //Todo: check existence of dependency
+            for (var dep : regex.getDependencies()) {
                 var newLocator = locator.withSuffix(new ActionLocator(List.of(dep)));
                 locatorStack.push(newLocator);
                 regexStack.push(fragmentIdRegexMap.get(dep));

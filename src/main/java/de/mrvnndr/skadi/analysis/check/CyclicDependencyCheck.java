@@ -1,7 +1,6 @@
 package de.mrvnndr.skadi.analysis.check;
 
 import de.mrvnndr.skadi.ConsoleUtil;
-import de.mrvnndr.skadi.analysis.FragmentDependencyParser;
 import de.mrvnndr.skadi.analysis.InputFile;
 import de.mrvnndr.skadi.analysis.ParsedRegex;
 import org.jgrapht.alg.cycle.TarjanSimpleCycles;
@@ -11,7 +10,6 @@ import org.jgrapht.graph.DefaultEdge;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class CyclicDependencyCheck implements SemanticCheck {
     @Override
@@ -27,7 +25,7 @@ public class CyclicDependencyCheck implements SemanticCheck {
         unifiedMap.putAll(inputFile.fragmentMap());
 
         for (var regexID : unifiedMap.keySet()) {
-            var deps = getDependenciesOfRegex(unifiedMap.get(regexID));
+            var deps = unifiedMap.get(regexID).getDependencies();
             for (var dep : deps) {
                 if (inputFile.fragmentMap().containsKey(dep)) {
                     continue;
@@ -59,7 +57,7 @@ public class CyclicDependencyCheck implements SemanticCheck {
             if (!graph.containsVertex(regexID)) {
                 graph.addVertex(regexID);
             }
-            var deps = getDependenciesOfRegex(unifiedMap.get(regexID));
+            var deps = unifiedMap.get(regexID).getDependencies();
             for (var dep : deps) {
                 if (!graph.containsVertex(dep)) {
                     graph.addVertex(dep);
@@ -79,11 +77,5 @@ public class CyclicDependencyCheck implements SemanticCheck {
         }
 
         return cycles.isEmpty();
-    }
-
-    private static Set<String> getDependenciesOfRegex(ParsedRegex regex) {
-        var depParser = new FragmentDependencyParser();
-        regex.walkTree(depParser);
-        return depParser.getDependencies();
     }
 }
