@@ -4,7 +4,7 @@ import de.mrvnndr.skadi.synthesis.EpsilonFreeNFA;
 
 public class EnterAction extends Action {
 
-    EnterAction(String code, ActionLocator locator, int id) {
+    public EnterAction(String code, ActionLocator locator, int id) {
         super(code, locator, id);
     }
 

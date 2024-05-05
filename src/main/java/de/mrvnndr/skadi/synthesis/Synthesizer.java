@@ -19,7 +19,7 @@ public class Synthesizer {
         return new SynthesisResult(inputFile.embedTargets(), inputFile.embeddings(), resultMap);
     }
 
-    private static ThompsonNFA buildRawAutomaton(String automatonName, InputFile inputFile) {
+    public static ThompsonNFA buildRawAutomaton(String automatonName, InputFile inputFile) {
         var sortedLocators = createAutomatonBuildOrder(automatonName, inputFile);
 
         var builtMap = new HashMap<ActionLocator, ThompsonNFA>();

@@ -4,7 +4,7 @@ import de.mrvnndr.skadi.synthesis.EpsilonFreeNFA;
 
 public class FinishAction extends Action {
 
-    FinishAction(String code, ActionLocator locator, int id) {
+    public FinishAction(String code, ActionLocator locator, int id) {
         super(code, locator, id);
     }
 
