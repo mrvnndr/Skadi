@@ -3,10 +3,7 @@ package de.mrvnndr.skadi.analysis;
 import de.mrvnndr.skadi.ConsoleUtil;
 import de.mrvnndr.skadi.analysis.antlr.SkadiFileLexer;
 import de.mrvnndr.skadi.analysis.antlr.SkadiFileParser;
-import de.mrvnndr.skadi.analysis.check.CyclicDependencyCheck;
-import de.mrvnndr.skadi.analysis.check.EmbeddingsCheck;
-import de.mrvnndr.skadi.analysis.check.LocatorsCheck;
-import de.mrvnndr.skadi.analysis.check.RegexNameUniqueCheck;
+import de.mrvnndr.skadi.analysis.check.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -54,7 +51,8 @@ public class AnalysisController {
         return new LocatorsCheck().performCheck(inputFile) &&
                 new RegexNameUniqueCheck().performCheck(inputFile) &&
                 new CyclicDependencyCheck().performCheck(inputFile) &&
-                new EmbeddingsCheck().performCheck(inputFile);
+                new EmbeddingsCheck().performCheck(inputFile) &&
+                new FragmentsUsedCheck().performCheck(inputFile);
     }
 
     private static class ParseErrorListener extends BaseErrorListener {
