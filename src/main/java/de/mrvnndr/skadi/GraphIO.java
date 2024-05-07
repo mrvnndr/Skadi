@@ -1,56 +1,81 @@
 package de.mrvnndr.skadi;
 
+import de.mrvnndr.skadi.synthesis.CharRange;
 import de.mrvnndr.skadi.synthesis.NFAEdge;
 import de.mrvnndr.skadi.synthesis.NFANode;
 import org.jgrapht.Graph;
-import org.jgrapht.nio.Attribute;
-import org.jgrapht.nio.DefaultAttribute;
-import org.jgrapht.nio.dot.DOTExporter;
 
-import java.io.FileWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class GraphIO {
-    public static void exportNFAToDOT(FileWriter writer, Graph<NFANode, NFAEdge> graph) {
-        DOTExporter<NFANode, NFAEdge> exporter = new DOTExporter<>(v -> String.valueOf(v.getId()));
-        exporter.setVertexAttributeProvider((v) -> getVertexAttributes(v, graph));
-        exporter.setGraphAttributeProvider(() -> getGraphAttributes(graph));
-        exporter.setEdgeAttributeProvider((e) -> getEdgeAttributes(e, graph));
-        exporter.exportGraph(graph, writer);
+    public static String exportNFAToDOT(Graph<NFANode, NFAEdge> graph) {
+        var sb = new StringBuilder();
+
+        sb.append("strict digraph G {\n");
+        sb.append(getGraphAttributes(graph));
+
+        for (var node : graph.vertexSet()) {
+            sb.append("  ").append(node.getId()).append(" [ ");
+            sb.append(getVertexAttributes(node, graph));
+            sb.append(" ];\n");
+        }
+
+        for (var edge : graph.edgeSet()) {
+            var sourceID = graph.getEdgeSource(edge).getId();
+            var targetID = graph.getEdgeTarget(edge).getId();
+            sb.append("  ").append(sourceID).append(" -> ").append(targetID).append(" [ ");
+            sb.append(getEdgeAttributes(edge, graph));
+            sb.append(" ];\n");
+        }
+
+        sb.append("}\n");
+
+        return sb.toString();
     }
 
-    private static Map<String, Attribute> getGraphAttributes(Graph<NFANode, NFAEdge> graph) {
-        Map<String, Attribute> map = new HashMap<>();
-        map.put("rankdir", DefaultAttribute.createAttribute("LR"));
-        return map;
+
+    private static String getGraphAttributes(Graph<NFANode, NFAEdge> graph) {
+        return "rankdir=LR;\n";
     }
 
-    private static Map<String, Attribute> getVertexAttributes(NFANode vertex, Graph<NFANode, NFAEdge> graph) {
-        Map<String, Attribute> map = new HashMap<>();
+    private static String getVertexAttributes(NFANode vertex, Graph<NFANode, NFAEdge> graph) {
+        var lst = new ArrayList<String>();
+
         if (vertex.isAccepting()) {
-            map.put("shape", DefaultAttribute.createAttribute("doublecircle"));
+            lst.add(getAttributeString("shape", "doublecircle"));
         }
 
         if (vertex.isStart()) {
-            map.put("shape", DefaultAttribute.createAttribute("diamond"));
+            lst.add(getAttributeString("shape", "diamond"));
         }
 
-        return map;
+        return String.join(" ", lst);
     }
 
-    private static Map<String, Attribute> getEdgeAttributes(NFAEdge edge, Graph<NFANode, NFAEdge> graph) {
-        Map<String, Attribute> map = new HashMap<>();
+    private static String getEdgeAttributes(NFAEdge edge, Graph<NFANode, NFAEdge> graph) {
+        var lst = new ArrayList<String>();
+
         if (graph.getEdgeSource(edge).getId() > graph.getEdgeTarget(edge).getId()) {
-            map.put("constraint", DefaultAttribute.createAttribute("false"));
+            lst.add(getAttributeString("constraint", "false"));
         }
         if (edge.isEpsilon()) {
-            map.put("style", DefaultAttribute.createAttribute("dashed"));
-            map.put("label", DefaultAttribute.createAttribute("ε"));
+            lst.add(getAttributeString("style", "dashed"));
+            lst.add(getAttributeString("label", "ε"));
         } else {
-            map.put("label", DefaultAttribute.createAttribute(generateEdgeLabel(edge.getChars())));
+            lst.add(getAttributeString("label", generateEdgeLabel(edge.getChars())));
         }
-        return map;
+
+        return String.join(" ", lst);
+    }
+
+    private static String getAttributeString(String attrName, String value) {
+        var escapedValue = value.replaceAll("\"", Matcher.quoteReplacement("\\\""));
+        return "%s = \"%s\"".formatted(attrName, escapedValue);
     }
 
     private static String generateEdgeLabel(SortedSet<Character> chars) {
@@ -80,36 +105,17 @@ public class GraphIO {
     }
 
     private static String alphanumericLabelString(SortedSet<Character> chars) {
-        if (chars.isEmpty()) {
-            return "";
-        }
-
-        var result = new StringBuilder();
-
-        char start = chars.removeFirst();
-        char lastSeen = start;
-        boolean dirty = true;
-        for (var c : chars) {
-            dirty = true;
-            if (c - lastSeen > 1) {
-                result.append(start);
-                if (lastSeen != start) {
-                    result.append("-").append(lastSeen);
-                }
-                start = c;
-                dirty = false;
-            }
-            lastSeen = c;
-        }
-
-        if (dirty) {
-            result.append(start);
-            if (lastSeen != start) {
-                result.append("-").append(lastSeen);
+        var sb = new StringBuilder();
+        var iter = CharRange.iterator(chars);
+        while (iter.hasNext()) {
+            var range = iter.next();
+            if (range.low() == range.high()) {
+                sb.append(range.low());
+            } else {
+                sb.append(range.low()).append("-").append(range.high());
             }
         }
-
-        return result.toString();
+        return sb.toString();
     }
 
     private static String controlCodeLabelString(Set<Character> chars) {
