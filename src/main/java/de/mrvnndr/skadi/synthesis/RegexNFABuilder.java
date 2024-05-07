@@ -1,7 +1,6 @@
 package de.mrvnndr.skadi.synthesis;
 
 import de.mrvnndr.skadi.analysis.ActionLocator;
-import de.mrvnndr.skadi.analysis.Quantifier;
 import de.mrvnndr.skadi.analysis.SemanticAnalysisException;
 import de.mrvnndr.skadi.analysis.antlr.SkadiRegexBaseListener;
 import de.mrvnndr.skadi.analysis.antlr.SkadiRegexParser;
@@ -92,38 +91,40 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
     public void exitAtomQuantifier(SkadiRegexParser.AtomQuantifierContext ctx) {
         var baseNFA = nfaFragments.get(ctx.atom());
         var quantifier = quantifiers.get(ctx.quantifier());
-        var low = quantifier.atLeast();
-        var high = quantifier.atMost();
 
-        ThompsonNFA result;
+        var result = switch (quantifier) {
+            case QAny() -> ThompsonNFA.repetition(baseNFA, false);
 
-        if (low == 0 && high == -1) {
-            result = ThompsonNFA.repetition(baseNFA, false);
-        } else if (low == 1 && high == -1) {
-            result = ThompsonNFA.repetition(baseNFA, true);
-        } else if (low == 0 && high == 1) {
-            result = ThompsonNFA.maybe(baseNFA);
-        } else if (low == high) {
-            result = baseNFA;
-            for (int i = 1; i < low; i++) {
-                result = ThompsonNFA.concatenation(result, baseNFA);
+            case QMaybe() -> ThompsonNFA.maybe(baseNFA);
+
+            case QExact(int cnt) -> {
+                var r = baseNFA;
+                for (int i = 1; i < cnt; i++) {
+                    r = ThompsonNFA.concatenation(r, baseNFA);
+                }
+                yield r;
             }
-        } else if (high == -1) {
-            result = baseNFA;
-            for (int i = 1; i < low - 1; i++) {
-                result = ThompsonNFA.concatenation(result, baseNFA);
+
+            case QAtLeast(int cnt) -> {
+                var r = baseNFA;
+                for (int i = 1; i < cnt - 1; i++) {
+                    r = ThompsonNFA.concatenation(r, baseNFA);
+                }
+                var loop = ThompsonNFA.repetition(baseNFA, true);
+                yield ThompsonNFA.concatenation(r, loop);
             }
-            var loop = ThompsonNFA.repetition(baseNFA, true);
-            result = ThompsonNFA.concatenation(result, loop);
-        } else {
-            result = baseNFA;
-            for (int i = 1; i < low; i++) {
-                result = ThompsonNFA.concatenation(result, baseNFA);
+
+            case QBounded(int low, int high) -> {
+                var r = baseNFA;
+                for (int i = 1; i < low; i++) {
+                    r = ThompsonNFA.concatenation(r, baseNFA);
+                }
+                for (int i = 1; i <= high - low; i++) {
+                    r = ThompsonNFA.concatenation(r, ThompsonNFA.maybe(baseNFA));
+                }
+                yield r;
             }
-            for (int i = 1; i <= high - low; i++) {
-                result = ThompsonNFA.concatenation(result, ThompsonNFA.maybe(baseNFA));
-            }
-        }
+        };
 
         nfaFragments.put(ctx, result);
     }
@@ -140,17 +141,17 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
 
     @Override
     public void exitQuantifierStar(SkadiRegexParser.QuantifierStarContext ctx) {
-        quantifiers.put(ctx, new Quantifier(0, -1));
+        quantifiers.put(ctx, new QAny());
     }
 
     @Override
     public void exitQuantifierPlus(SkadiRegexParser.QuantifierPlusContext ctx) {
-        quantifiers.put(ctx, new Quantifier(1, -1));
+        quantifiers.put(ctx, new QAtLeast(1));
     }
 
     @Override
     public void exitQuantifierQuestionMark(SkadiRegexParser.QuantifierQuestionMarkContext ctx) {
-        quantifiers.put(ctx, new Quantifier(0, 1));
+        quantifiers.put(ctx, new QMaybe());
     }
 
     @Override
@@ -161,13 +162,18 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
             throw new SemanticAnalysisException("Quantifier 0!", ctx.start);
         }
 
-        quantifiers.put(ctx, new Quantifier(amount, amount));
+        quantifiers.put(ctx, new QExact(amount));
     }
 
     @Override
     public void exitQuantifierAtLeast(SkadiRegexParser.QuantifierAtLeastContext ctx) {
         var amount = assembleNumber(ctx.digit());
-        quantifiers.put(ctx, new Quantifier(amount, -1));
+
+        if (amount == 0) {
+            quantifiers.put(ctx, new QAny());
+        } else {
+            quantifiers.put(ctx, new QAtLeast(amount));
+        }
     }
 
     @Override
@@ -183,7 +189,7 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
             throw new SemanticAnalysisException("Qualifier lower bound greater than upper bound!", ctx.start);
         }
 
-        quantifiers.put(ctx, new Quantifier(amountLow, amountHigh));
+        quantifiers.put(ctx, new QBounded(amountLow, amountHigh));
     }
 
     private int assembleNumber(List<SkadiRegexParser.DigitContext> digits) {
@@ -462,5 +468,23 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         } else {
             chars.put(ctx, chars.get(ctx.character_class_escape()));
         }
+    }
+
+    private sealed interface Quantifier {
+    }
+
+    private record QAny() implements Quantifier {
+    }
+
+    private record QMaybe() implements Quantifier {
+    }
+
+    private record QAtLeast(int count) implements Quantifier {
+    }
+
+    private record QExact(int count) implements Quantifier {
+    }
+
+    private record QBounded(int lowBound, int highBound) implements Quantifier {
     }
 }
