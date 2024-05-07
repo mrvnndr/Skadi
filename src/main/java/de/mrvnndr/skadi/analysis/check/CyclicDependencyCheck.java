@@ -1,7 +1,7 @@
 package de.mrvnndr.skadi.analysis.check;
 
 import de.mrvnndr.skadi.ConsoleUtil;
-import de.mrvnndr.skadi.analysis.InputFile;
+import de.mrvnndr.skadi.analysis.AnalysisResult;
 import de.mrvnndr.skadi.analysis.ParsedRegex;
 import org.jgrapht.alg.cycle.TarjanSimpleCycles;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -13,24 +13,24 @@ import java.util.List;
 
 public class CyclicDependencyCheck implements SemanticCheck {
     @Override
-    public boolean performCheck(InputFile inputFile) {
-        return checkReferencesValid(inputFile) && checkDependenciesNonCyclic(inputFile);
+    public boolean performCheck(AnalysisResult analysisResult) {
+        return checkReferencesValid(analysisResult) && checkDependenciesNonCyclic(analysisResult);
     }
 
-    private boolean checkReferencesValid(InputFile inputFile) {
+    private boolean checkReferencesValid(AnalysisResult analysisResult) {
         var result = true;
         var unifiedMap = new HashMap<String, ParsedRegex>();
 
-        unifiedMap.putAll(inputFile.automatonMap());
-        unifiedMap.putAll(inputFile.fragmentMap());
+        unifiedMap.putAll(analysisResult.automatonMap());
+        unifiedMap.putAll(analysisResult.fragmentMap());
 
         for (var regexID : unifiedMap.keySet()) {
             var deps = unifiedMap.get(regexID).getDependencies();
             for (var dep : deps) {
-                if (inputFile.fragmentMap().containsKey(dep)) {
+                if (analysisResult.fragmentMap().containsKey(dep)) {
                     continue;
                 }
-                if (inputFile.automatonMap().containsKey(dep)) {
+                if (analysisResult.automatonMap().containsKey(dep)) {
                     var msg = "In regex '%s': Automatons (such as '%s') may not be used in other regular expressions!"
                             .formatted(regexID, dep);
                     ConsoleUtil.error(msg);
@@ -46,12 +46,12 @@ public class CyclicDependencyCheck implements SemanticCheck {
         return result;
     }
 
-    private boolean checkDependenciesNonCyclic(InputFile inputFile) {
+    private boolean checkDependenciesNonCyclic(AnalysisResult analysisResult) {
         var graph = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
         var unifiedMap = new HashMap<String, ParsedRegex>();
 
-        unifiedMap.putAll(inputFile.automatonMap());
-        unifiedMap.putAll(inputFile.fragmentMap());
+        unifiedMap.putAll(analysisResult.automatonMap());
+        unifiedMap.putAll(analysisResult.fragmentMap());
 
         for (var regexID : unifiedMap.keySet()) {
             if (!graph.containsVertex(regexID)) {

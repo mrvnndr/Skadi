@@ -1,29 +1,29 @@
 package de.mrvnndr.skadi.synthesis;
 
 import de.mrvnndr.skadi.analysis.ActionLocator;
-import de.mrvnndr.skadi.analysis.InputFile;
+import de.mrvnndr.skadi.analysis.AnalysisResult;
 import de.mrvnndr.skadi.analysis.ParsedRegex;
 
 import java.util.*;
 
 public class Synthesizer {
 
-    public static SynthesisResult synthesize(InputFile inputFile) {
-        var automatonMap = inputFile.automatonMap();
+    public static SynthesisResult synthesize(AnalysisResult analysisResult) {
+        var automatonMap = analysisResult.automatonMap();
         var resultMap = new HashMap<String, EpsilonFreeNFA>();
 
         for (var automatonName : automatonMap.keySet()) {
-            var nfa = buildAutomaton(automatonName, inputFile);
+            var nfa = buildAutomaton(automatonName, analysisResult);
             resultMap.put(automatonName, nfa);
         }
-        return new SynthesisResult(inputFile.embedTargets(), inputFile.embeddings(), resultMap);
+        return new SynthesisResult(analysisResult.embedTargets(), analysisResult.embeddings(), resultMap);
     }
 
-    public static ThompsonNFA buildRawAutomaton(String automatonName, InputFile inputFile) {
-        var sortedLocators = createAutomatonBuildOrder(automatonName, inputFile);
+    public static ThompsonNFA buildRawAutomaton(String automatonName, AnalysisResult analysisResult) {
+        var sortedLocators = createAutomatonBuildOrder(automatonName, analysisResult);
 
         var builtMap = new HashMap<ActionLocator, ThompsonNFA>();
-        var regexMap = buildMergedRegexMap(inputFile);
+        var regexMap = buildMergedRegexMap(analysisResult);
 
         for (var locator : sortedLocators) {
             var regex = regexMap.get(locator.definitionName());
@@ -34,18 +34,18 @@ public class Synthesizer {
         return builtMap.get(new ActionLocator(automatonName));
     }
 
-    private static EpsilonFreeNFA buildAutomaton(String automatonName, InputFile inputFile) {
-        var sortedLocators = createAutomatonBuildOrder(automatonName, inputFile);
+    private static EpsilonFreeNFA buildAutomaton(String automatonName, AnalysisResult analysisResult) {
+        var sortedLocators = createAutomatonBuildOrder(automatonName, analysisResult);
 
         var builtMap = new HashMap<ActionLocator, ThompsonNFA>();
-        var regexMap = buildMergedRegexMap(inputFile);
+        var regexMap = buildMergedRegexMap(analysisResult);
 
         for (var locator : sortedLocators) {
             var regex = regexMap.get(locator.definitionName());
             var nfa = buildLocatorNFA(locator, regex, builtMap);
 
             var epsFreeNFA = EpsilonFreeNFA.fromThompsonNFA(nfa);
-            inputFile.getMatchingActions(locator).forEach(a -> a.apply(epsFreeNFA));
+            analysisResult.getMatchingActions(locator).forEach(a -> a.apply(epsFreeNFA));
 
             if (locator.getSize() == 1) {
                 return epsFreeNFA;
@@ -55,9 +55,9 @@ public class Synthesizer {
         throw new IllegalStateException();
     }
 
-    private static Map<String, ParsedRegex> buildMergedRegexMap(InputFile inputFile) {
-        var automatonMap = inputFile.automatonMap();
-        var fragmentMap = inputFile.fragmentMap();
+    private static Map<String, ParsedRegex> buildMergedRegexMap(AnalysisResult analysisResult) {
+        var automatonMap = analysisResult.automatonMap();
+        var fragmentMap = analysisResult.fragmentMap();
 
         var regexMap = new HashMap<String, ParsedRegex>();
         regexMap.putAll(automatonMap);
@@ -66,10 +66,10 @@ public class Synthesizer {
         return regexMap;
     }
 
-    private static List<ActionLocator> createAutomatonBuildOrder(String automatonName, InputFile inputFile) {
-        var automatonRegex = inputFile.automatonMap().get(automatonName);
+    private static List<ActionLocator> createAutomatonBuildOrder(String automatonName, AnalysisResult analysisResult) {
+        var automatonRegex = analysisResult.automatonMap().get(automatonName);
         var baseLocator = new ActionLocator(automatonName);
-        var allLocators = buildAllLocators(baseLocator, automatonRegex, inputFile.fragmentMap());
+        var allLocators = buildAllLocators(baseLocator, automatonRegex, analysisResult.fragmentMap());
         return allLocators.stream()
                 .sorted(Comparator.comparingInt(ActionLocator::getSize))
                 .toList()

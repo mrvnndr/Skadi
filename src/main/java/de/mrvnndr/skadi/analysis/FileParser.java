@@ -22,8 +22,8 @@ public class FileParser extends SkadiFileParserBaseListener {
 
     private int actionIndex = 1;
 
-    public InputFile getResult() {
-        return new InputFile(fragmentIdRegexMap, automatonIdRegexMap, actions, embedTargets, embeddings);
+    public AnalysisResult getResult() {
+        return new AnalysisResult(fragmentIdRegexMap, automatonIdRegexMap, actions, embedTargets, embeddings);
     }
 
     @Override
@@ -81,9 +81,7 @@ public class FileParser extends SkadiFileParserBaseListener {
         var kvMap = new HashMap<String, String>();
         var id = ctx.ID().getText();
 
-        ctx.embedding_key_value().forEach(kv -> {
-            kvMap.put(kv.ID(0).getText(), kv.ID(1).getText());
-        });
+        ctx.embedding_key_value().forEach(kv -> kvMap.put(kv.ID(0).getText(), kv.ID(1).getText()));
 
         if (embeddings.containsKey(id)) {
             throw new SemanticAnalysisException("Multiple definitions of embedding " + id + "!");

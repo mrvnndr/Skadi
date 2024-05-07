@@ -1,14 +1,14 @@
 package de.mrvnndr.skadi.analysis.check;
 
 import de.mrvnndr.skadi.ConsoleUtil;
-import de.mrvnndr.skadi.analysis.InputFile;
+import de.mrvnndr.skadi.analysis.AnalysisResult;
 
 public class RegexNameUniqueCheck implements SemanticCheck {
 
     @Override
-    public boolean performCheck(InputFile inputFile) {
-        var automatons = inputFile.automatonMap();
-        var fragments = inputFile.fragmentMap();
+    public boolean performCheck(AnalysisResult analysisResult) {
+        var automatons = analysisResult.automatonMap();
+        var fragments = analysisResult.fragmentMap();
         var result = true;
 
         for (var automatonID : automatons.keySet()) {

@@ -12,7 +12,7 @@ import java.nio.file.Path;
 
 public class AnalysisController {
 
-    public static InputFile analyseFile(Path path) throws IOException {
+    public static AnalysisResult analyseFile(Path path) throws IOException {
         var parseTree = buildParseTree(path);
 
         var walker = new ParseTreeWalker();
@@ -47,12 +47,12 @@ public class AnalysisController {
         return parseTree;
     }
 
-    private static boolean performSemanticChecks(InputFile inputFile) {
-        return new LocatorsCheck().performCheck(inputFile) &&
-                new RegexNameUniqueCheck().performCheck(inputFile) &&
-                new CyclicDependencyCheck().performCheck(inputFile) &&
-                new EmbeddingsCheck().performCheck(inputFile) &&
-                new FragmentsUsedCheck().performCheck(inputFile);
+    private static boolean performSemanticChecks(AnalysisResult analysisResult) {
+        return new LocatorsCheck().performCheck(analysisResult) &&
+                new RegexNameUniqueCheck().performCheck(analysisResult) &&
+                new CyclicDependencyCheck().performCheck(analysisResult) &&
+                new EmbeddingsCheck().performCheck(analysisResult) &&
+                new FragmentsUsedCheck().performCheck(analysisResult);
     }
 
     private static class ParseErrorListener extends BaseErrorListener {

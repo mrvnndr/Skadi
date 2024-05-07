@@ -1,26 +1,26 @@
 package de.mrvnndr.skadi.analysis.check;
 
 import de.mrvnndr.skadi.ConsoleUtil;
-import de.mrvnndr.skadi.analysis.InputFile;
+import de.mrvnndr.skadi.analysis.AnalysisResult;
 
 import java.util.HashSet;
 
 public class EmbeddingsCheck implements SemanticCheck {
 
     @Override
-    public boolean performCheck(InputFile inputFile) {
+    public boolean performCheck(AnalysisResult analysisResult) {
         var result = true;
         var allEmbeddingsUsed = new HashSet<String>();
 
-        if (inputFile.embedTargets().isEmpty()) {
+        if (analysisResult.embedTargets().isEmpty()) {
             var msg = "The input does not define any output!";
             ConsoleUtil.warn(msg);
         }
 
-        for (var embedTarget : inputFile.embedTargets()) {
+        for (var embedTarget : analysisResult.embedTargets()) {
             for (var embedID : embedTarget.embeddingIDs()) {
                 allEmbeddingsUsed.add(embedID);
-                if (!inputFile.embeddings().containsKey(embedID)) {
+                if (!analysisResult.embeddings().containsKey(embedID)) {
                     var msg = "Unknown embedding '%s' used in embed target!".formatted(embedID);
                     ConsoleUtil.error(msg);
                     result = false;
@@ -28,7 +28,7 @@ public class EmbeddingsCheck implements SemanticCheck {
             }
         }
 
-        for (var embedID : inputFile.embeddings().keySet()) {
+        for (var embedID : analysisResult.embeddings().keySet()) {
             if (!allEmbeddingsUsed.contains(embedID)) {
                 var msg = "Embedding '%s' is unused!".formatted(embedID);
                 ConsoleUtil.warn(msg);
