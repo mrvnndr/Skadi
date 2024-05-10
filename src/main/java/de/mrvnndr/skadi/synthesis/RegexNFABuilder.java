@@ -106,11 +106,16 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
             }
 
             case QAtLeast(int cnt) -> {
+                var loop = ThompsonNFA.repetition(baseNFA, true);
+
+                if (cnt == 1) {
+                    yield loop;
+                }
+
                 var r = baseNFA;
                 for (int i = 1; i < cnt - 1; i++) {
                     r = ThompsonNFA.concatenation(r, baseNFA);
                 }
-                var loop = ThompsonNFA.repetition(baseNFA, true);
                 yield ThompsonNFA.concatenation(r, loop);
             }
 
@@ -186,7 +191,7 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         }
 
         if (amountLow > amountHigh) {
-            throw new SemanticAnalysisException("Qualifier lower bound greater than upper bound!", ctx.start);
+            throw new SemanticAnalysisException("Quantifier lower bound greater than upper bound!", ctx.start);
         }
 
         quantifiers.put(ctx, new QBounded(amountLow, amountHigh));
