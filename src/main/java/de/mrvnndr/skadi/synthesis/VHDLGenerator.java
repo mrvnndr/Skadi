@@ -56,7 +56,7 @@ public class VHDLGenerator {
     private String replaceToken(String input, String token, String replacement) {
         var indentation = CodeUtil.getTokenIndentation(input, token);
         var indented = replacement.indent(indentation);
-        return input.replaceFirst("[ \\t]*" + token, Matcher.quoteReplacement(indented));
+        return input.replaceAll("[ \\t]*" + token, Matcher.quoteReplacement(indented));
     }
 
     private String getOptionValue(String embeddingID, String optionName) {
