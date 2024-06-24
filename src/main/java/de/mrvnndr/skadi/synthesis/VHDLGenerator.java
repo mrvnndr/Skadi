@@ -90,7 +90,6 @@ public class VHDLGenerator {
 
         sb.append("variable state_register : bit_vector(1 to %d);\n".formatted(stateCount));
         sb.append("variable new_state : bit_vector(1 to %d);\n".formatted(stateCount));
-        sb.append("variable ascii : unsigned(7 downto 0);\n");
 
         for (var action : actions) {
             var varName = getActionVarName(action);
@@ -104,7 +103,6 @@ public class VHDLGenerator {
         var actions = getAllActions(automatonID);
 
         sb.append("new_state := (others => '0');\n");
-        sb.append("ascii := unsigned(char);\n");
         for (var action : actions) {
             sb.append(getActionVarName(action)).append(" := false;\n");
         }
