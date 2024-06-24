@@ -2,7 +2,9 @@ package de.mrvnndr.skadi.synthesis;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,11 @@ public class EpsilonFreeNFA {
 
             for (var outgoingEdge : targetOutgoingEdges) {
                 var isEpsilon = outgoingEdge.isEpsilon();
+
+                if (isEpsilon && input.getEdgeTarget(outgoingEdge) == source) {
+                    continue;
+                }
+
                 addedEpsilonEdge = isEpsilon || addedEpsilonEdge;
                 var newEdge = new NFAEdge(isEpsilon);
                 newEdge.insertAll(outgoingEdge.getChars());
@@ -68,15 +75,15 @@ public class EpsilonFreeNFA {
     }
 
     private static void cleanUnreachableStates(Graph<NFANode, NFAEdge> g) {
-        while (true) {
-            var removable = g.vertexSet().stream()
-                    .filter(n -> !n.isStart() && g.incomingEdgesOf(n).isEmpty())
-                    .collect(Collectors.toSet());
-            g.removeAllVertices(removable);
-            if (removable.isEmpty()) {
-                break;
-            }
-        }
+        var reachableStates = new HashSet<NFANode>();
+        var statesToDelete = new HashSet<NFANode>();
+        var startState = g.vertexSet().stream().filter(NFANode::isStart).findAny().orElseThrow();
+
+        var iter = new BreadthFirstIterator<>(g, startState);
+        iter.forEachRemaining(reachableStates::add);
+
+        g.vertexSet().stream().filter(n -> !reachableStates.contains(n)).forEach(statesToDelete::add);
+        g.removeAllVertices(statesToDelete);
     }
 
     public Graph<NFANode, NFAEdge> getNFA() {
