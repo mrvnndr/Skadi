@@ -37,6 +37,10 @@ public record CharRange(Character low, Character high) {
                 return new CharRange(lowerChar, lowerChar);
             }
 
+            if (!this.charIterator.hasNext()) {
+                return new CharRange(lowerChar, upperChar);
+            }
+
             do {
                 var next = getNextCharacter();
                 if (next - upperChar > 1) {
