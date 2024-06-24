@@ -179,6 +179,8 @@ pattern_char
     | PATTERN_CHAR
     | COMMA
     | COLON
+    | DASH
+    | UNDERSCORE
     ;
 
 digit
