@@ -6,8 +6,16 @@ import de.mrvnndr.skadi.analysis.ParsedRegex;
 
 import java.util.*;
 
+/**
+ * This class is the central access point for the construction of the automatons.
+ */
 public class Synthesizer {
 
+    /**
+     * Builds all automatons in their epsilon free form.
+     *
+     * @return The result of synthesis, including the automatons and the embedTargets with their embeddings
+     */
     public static SynthesisResult synthesize(AnalysisResult analysisResult) {
         var automatonMap = analysisResult.automatonMap();
         var resultMap = new HashMap<String, EpsilonFreeNFA>();
@@ -19,6 +27,12 @@ public class Synthesizer {
         return new SynthesisResult(analysisResult.embedTargets(), analysisResult.embeddings(), resultMap);
     }
 
+    /**
+     * Builds the automaton with the given id without any actions and including epsilon transitions.
+     * This method is only used for visualizing the epsilon NFA when requested.
+     * @param automatonName The id of an automaton
+     * @return The raw automaton with epsilon transitions and without actions
+     */
     public static ThompsonNFA buildRawAutomaton(String automatonName, AnalysisResult analysisResult) {
         var sortedLocators = createAutomatonBuildOrder(automatonName, analysisResult);
 
@@ -34,6 +48,11 @@ public class Synthesizer {
         return builtMap.get(new ActionLocator(automatonName));
     }
 
+    /**
+     * Builds the automaton with the given id with actions and no epsilon transitions.
+     * @param automatonName The id of an automaton
+     * @return The automaton with actions and without epsilon transitions
+     */
     private static EpsilonFreeNFA buildAutomaton(String automatonName, AnalysisResult analysisResult) {
         var sortedLocators = createAutomatonBuildOrder(automatonName, analysisResult);
 
@@ -55,6 +74,10 @@ public class Synthesizer {
         throw new IllegalStateException();
     }
 
+    /**
+     * Helper method to put fragments and automatons together in one map.
+     * @return Map containing all fragments and automatons with their id
+     */
     private static Map<String, ParsedRegex> buildMergedRegexMap(AnalysisResult analysisResult) {
         var automatonMap = analysisResult.automatonMap();
         var fragmentMap = analysisResult.fragmentMap();
@@ -66,6 +89,11 @@ public class Synthesizer {
         return regexMap;
     }
 
+    /**
+     * Computes the list of ActionLocators in the proper order (shortest to longest) for building the automaton.
+     * @param automatonName The id of an automaton
+     * @return The ActionLocators in the order they can be built in.
+     */
     private static List<ActionLocator> createAutomatonBuildOrder(String automatonName, AnalysisResult analysisResult) {
         var automatonRegex = analysisResult.automatonMap().get(automatonName);
         var baseLocator = new ActionLocator(automatonName);
@@ -76,6 +104,13 @@ public class Synthesizer {
                 .reversed();
     }
 
+    /**
+     * Given a starting automaton, constructs all ActionLocators derivable from it.
+     * @param start ActionLocator belonging to the starting automaton (usually simply its name)
+     * @param automaton Parse tree belonging to the starting automaton
+     * @param fragmentIdRegexMap Map of fragment ids and their parse trees
+     * @return Set of all derivable ActionLocators
+     */
     private static Set<ActionLocator> buildAllLocators(ActionLocator start, ParsedRegex automaton,
                                                        Map<String, ParsedRegex> fragmentIdRegexMap) {
         var locatorStack = new ArrayDeque<ActionLocator>();
@@ -100,6 +135,13 @@ public class Synthesizer {
         return result;
     }
 
+    /**
+     * Helper method to build the epsilon NFA for a given regular expression.
+     * @param locator The locator at which the expression resides for inserting the right NFAs for fragments
+     * @param regex The expression
+     * @param builtFragments The built automatons for all fragments used in this expression
+     * @return The epsilon NFA for the regular expression
+     */
     private static ThompsonNFA buildLocatorNFA(ActionLocator locator, ParsedRegex regex,
                                                Map<ActionLocator, ThompsonNFA> builtFragments) {
         var buildListener = new RegexNFABuilder(locator, builtFragments);
