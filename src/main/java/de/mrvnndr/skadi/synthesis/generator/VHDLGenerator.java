@@ -1,19 +1,19 @@
-package de.mrvnndr.skadi.synthesis;
+package de.mrvnndr.skadi.synthesis.generator;
 
-import de.mrvnndr.skadi.analysis.*;
+import de.mrvnndr.skadi.analysis.Action;
+import de.mrvnndr.skadi.analysis.EmbedTarget;
+import de.mrvnndr.skadi.synthesis.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
-public class VHDLGenerator {
-    private final SynthesisResult synthesisResult;
+public class VHDLGenerator extends CodeGenerator {
 
     public VHDLGenerator(SynthesisResult synthesisResult) {
-        this.synthesisResult = synthesisResult;
+        super(synthesisResult);
     }
 
+    @Override
     public String generate() {
         var sb = new StringBuilder();
         for (var emb : this.synthesisResult.embedTargets()) {
@@ -51,32 +51,6 @@ public class VHDLGenerator {
         }
 
         return code;
-    }
-
-    private String replaceToken(String input, String token, String replacement) {
-        var indentation = CodeUtil.getTokenIndentation(input, token);
-        var indented = replacement.indent(indentation);
-        return input.replaceAll("[ \\t]*" + token, Matcher.quoteReplacement(indented));
-    }
-
-    private String getOptionValue(String embeddingID, String optionName) {
-        var embedding = synthesisResult.embeddings().get(embeddingID);
-        var optionValue = embedding.optionMap().get(optionName);
-
-        if (optionValue == null) {
-            var msg = "Embedding %s does not define option %s!".formatted(embeddingID, optionName);
-            throw new GenerationException(msg);
-        }
-
-        return optionValue;
-    }
-
-    private Collection<Action> getAllActions(String automatonID) {
-        return synthesisResult.automatons().get(automatonID).getNFA().edgeSet()
-                .stream()
-                .map(NFAEdge::getActions)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
     }
 
     private String generateReset() {
@@ -153,18 +127,6 @@ public class VHDLGenerator {
         }
         sb.append("new_state(%d) := '1';\n".formatted(targetID));
         return sb.toString();
-    }
-
-    private String getActionVarName(Action action) {
-        var locString = action.getLocator().toString();
-        var stateString = switch (action) {
-            case EnterAction ignored -> "enter";
-            case ProgressAction ignored -> "progress";
-            case FinishAction ignored -> "finish";
-            default -> throw new IllegalStateException("Unexpected value: " + action);
-        };
-
-        return "do_%s_%s_%d".formatted(stateString, locString.replace(".", "_"), action.getId());
     }
 
     private String generateTransitionCondition(NFAEdge edge) {

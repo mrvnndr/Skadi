@@ -3,10 +3,10 @@ package de.mrvnndr.skadi;
 import de.mrvnndr.skadi.analysis.AnalysisController;
 import de.mrvnndr.skadi.analysis.AnalysisResult;
 import de.mrvnndr.skadi.analysis.SemanticAnalysisException;
-import de.mrvnndr.skadi.synthesis.JavaGenerator;
 import de.mrvnndr.skadi.synthesis.SynthesisResult;
 import de.mrvnndr.skadi.synthesis.Synthesizer;
-import de.mrvnndr.skadi.synthesis.VHDLGenerator;
+import de.mrvnndr.skadi.synthesis.generator.JavaGenerator;
+import de.mrvnndr.skadi.synthesis.generator.VHDLGenerator;
 import picocli.CommandLine;
 
 import java.io.FileWriter;
@@ -71,10 +71,11 @@ public class Skadi implements Callable<Integer> {
     }
 
     private String generateOutput(SynthesisResult synthesisResult, TargetLanguage targetLanguage) {
-        return switch (targetLanguage) {
-            case VHDL -> new VHDLGenerator(synthesisResult).generate();
-            case JAVA -> JavaGenerator.generate(synthesisResult);
+        var gen = switch (targetLanguage) {
+            case VHDL -> new VHDLGenerator(synthesisResult);
+            case JAVA -> new JavaGenerator(synthesisResult);
         };
+        return gen.generate();
     }
 
     private int writeDOT(SynthesisResult synthesisResult, AnalysisResult analysisResult, Path inputPath) {

@@ -36,7 +36,7 @@ public class NFAEdge {
             throw new IllegalStateException("Cannot add an action to an epsilon edge");
         }
         if (this.actions.contains(action)) {
-            throw new IllegalStateException("Cannot add an action multiple times to an epsilon edge");
+            throw new IllegalStateException("Cannot add an action multiple times to an edge");
         }
         actions.add(action);
     }
