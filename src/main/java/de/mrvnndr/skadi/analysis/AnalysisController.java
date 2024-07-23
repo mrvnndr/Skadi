@@ -1,10 +1,10 @@
 package de.mrvnndr.skadi.analysis;
 
-import de.mrvnndr.skadi.ConsoleUtil;
 import de.mrvnndr.skadi.analysis.antlr.SkadiFileLexer;
 import de.mrvnndr.skadi.analysis.antlr.SkadiFileParser;
 import de.mrvnndr.skadi.analysis.check.*;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class AnalysisController {
         var inputFile = parser.getResult();
 
         if (!performSemanticChecks(inputFile)) {
-            throw new SemanticAnalysisException("");
+            throw new AnalysisException("");
         }
 
         return inputFile;
@@ -40,11 +40,7 @@ public class AnalysisController {
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
 
-        var parseTree = parser.file();
-        if (errorListener.error) {
-            throw new IllegalArgumentException();
-        }
-        return parseTree;
+        return parser.file();
     }
 
     private static boolean performSemanticChecks(AnalysisResult analysisResult) {
@@ -55,19 +51,4 @@ public class AnalysisController {
                 new FragmentsUsedCheck().performCheck(analysisResult);
     }
 
-    private static class ParseErrorListener extends BaseErrorListener {
-        private boolean error = false;
-
-        @Override
-        public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
-                                String msg, RecognitionException e) {
-            String sourceName = recognizer.getInputStream().getSourceName();
-            if (!sourceName.isEmpty()) {
-                sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
-            }
-
-            error = true;
-            ConsoleUtil.error(sourceName + msg);
-        }
-    }
 }

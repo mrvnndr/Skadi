@@ -2,12 +2,12 @@ package de.mrvnndr.skadi.analysis;
 
 import org.antlr.v4.runtime.Token;
 
-public class SemanticAnalysisException extends RuntimeException {
-    public SemanticAnalysisException(String message) {
+public class AnalysisException extends RuntimeException {
+    public AnalysisException(String message) {
         super(message);
     }
 
-    public SemanticAnalysisException(String message, Token token) {
+    public AnalysisException(String message, Token token) {
         super(message);
     }
 

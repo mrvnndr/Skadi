@@ -1,7 +1,7 @@
 package de.mrvnndr.skadi.synthesis;
 
 import de.mrvnndr.skadi.analysis.ActionLocator;
-import de.mrvnndr.skadi.analysis.SemanticAnalysisException;
+import de.mrvnndr.skadi.analysis.AnalysisException;
 import de.mrvnndr.skadi.analysis.antlr.SkadiRegexBaseListener;
 import de.mrvnndr.skadi.analysis.antlr.SkadiRegexParser;
 import org.antlr.v4.runtime.RuleContext;
@@ -136,7 +136,7 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
 
     @Override
     public void exitAtomAssertion(SkadiRegexParser.AtomAssertionContext ctx) {
-        throw new SemanticAnalysisException("Assertions not implemented!", ctx.start);
+        throw new AnalysisException("Assertions not implemented!", ctx.start);
     }
 
     @Override
@@ -164,7 +164,8 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var amount = assembleNumber(ctx.digit());
 
         if (amount == 0) {
-            throw new SemanticAnalysisException("Quantifier 0!", ctx.start);
+            var msg = "Quantifier 0 in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg, ctx.start);
         }
 
         quantifiers.put(ctx, new QExact(amount));
@@ -187,11 +188,13 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var amountHigh = assembleNumber(ctx.amtH);
 
         if (amountLow == 0 && amountHigh == 0) {
-            throw new SemanticAnalysisException("Quantifier 0!", ctx.start);
+            var msg = "Quantifier 0 in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg, ctx.start);
         }
 
         if (amountLow > amountHigh) {
-            throw new SemanticAnalysisException("Quantifier lower bound greater than upper bound!", ctx.start);
+            var msg = "Quantifier lower bound greater than upper bound in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg, ctx.start);
         }
 
         quantifiers.put(ctx, new QBounded(amountLow, amountHigh));
@@ -207,13 +210,14 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var text = ctx.pattern_char().getText();
 
         if (text.length() != 1) {
-            throw new SemanticAnalysisException("Char atom invalid!", ctx.start);
+            throw new AnalysisException("Char atom invalid!", ctx.start);
         }
 
         var c = text.charAt(0);
 
         if (c > 127) {
-            throw new SemanticAnalysisException("Non-ASCII char!", ctx.start);
+            var msg = "Non-ASCII char in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg, ctx.start);
         }
 
         var result = ThompsonNFA.characterTransition(List.of(c));
@@ -256,7 +260,7 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var ruleLocator = new ActionLocator(List.of(ruleName)).withPrefix(currentLocator);
 
         if (!builtFragments.containsKey(ruleLocator)) {
-            throw new SemanticAnalysisException("Unknown rule " + ruleName + "!");
+            throw new AnalysisException("Unknown rule " + ruleName + "!");
         }
 
         nfaFragments.put(ctx, builtFragments.get(ruleLocator));
@@ -315,7 +319,8 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
     public void exitDecimal_escape(SkadiRegexParser.Decimal_escapeContext ctx) {
         var esc = Integer.parseInt(ctx.getText());
         if (esc > 127) {
-            throw new SemanticAnalysisException("Non-ASCII char!", ctx.start);
+            var msg = "Non-ASCII char in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg, ctx.start);
         }
         chars.put(ctx, Set.of((char) esc));
     }
@@ -325,7 +330,8 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var str = ctx.hex_digit(0).getText() + ctx.hex_digit(1).getText();
         var esc = Integer.parseInt(str, 16);
         if (esc > 127) {
-            throw new SemanticAnalysisException("Non-ASCII char!", ctx.start);
+            var msg = "Non-ASCII char in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg, ctx.start);
         }
         chars.put(ctx, Set.of((char) esc));
     }
@@ -358,7 +364,12 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
     @Override
     public void exitCharacter_class(SkadiRegexParser.Character_classContext ctx) {
         if (ctx.CIRCUMFLEX() == null) {
-            chars.put(ctx, chars.get(ctx.class_ranges()));
+            var classChars = chars.get(ctx.class_ranges());
+            if (classChars.isEmpty()) {
+                var msg = "Empty character class in fragment '" + currentLocator.definitionName() + "'!";
+                throw new AnalysisException(msg);
+            }
+            chars.put(ctx, classChars);
         } else {
             var ascii = IntStream.range(0, 128).boxed()
                     .map(i -> Character.toChars(i)[0])
@@ -367,6 +378,11 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
 
             var result = new HashSet<>(ascii);
             result.removeAll(excludedChars);
+
+            if (result.isEmpty()) {
+                var msg = "Empty character class in fragment '" + currentLocator.definitionName() + "'!";
+                throw new AnalysisException(msg);
+            }
             chars.put(ctx, result);
         }
     }
@@ -418,7 +434,8 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var setStart = chars.get(start);
         var setStop = chars.get(stop);
         if (setStart.size() != 1 || setStop.size() != 1) {
-            throw new SemanticAnalysisException("Char range invalid!");
+            var msg = "Char range invalid in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg);
         }
 
         char cStart = setStart.iterator().next();
@@ -426,7 +443,8 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
         var result = new HashSet<Character>();
 
         if (cStart > cStop) {
-            throw new SemanticAnalysisException("Char range invalid!");
+            var msg = "Char range invalid in fragment '" + currentLocator.definitionName() + "'!";
+            throw new AnalysisException(msg);
         }
 
         for (char c = cStart; c <= cStop; c++) {
@@ -455,7 +473,8 @@ public class RegexNFABuilder extends SkadiRegexBaseListener {
             var c = text.charAt(0);
 
             if (c > 127) {
-                throw new SemanticAnalysisException("Non-ASCII char!", ctx.start);
+                var msg = "Non-ASCII char in fragment '" + currentLocator.definitionName() + "'!";
+                throw new AnalysisException(msg, ctx.start);
             }
 
             chars.put(ctx, Set.of(c));

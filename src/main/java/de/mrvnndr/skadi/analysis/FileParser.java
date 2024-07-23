@@ -37,7 +37,7 @@ public class FileParser extends SkadiFileParserBaseListener {
         var id = ctx.ID().getText();
 
         if (fragmentIdRegexMap.containsKey(id)) {
-            throw new SemanticAnalysisException("Multiple definitions of fragment " + id + "!");
+            throw new AnalysisException("Multiple definitions of fragment " + id + "!");
         }
 
         var regex = ctx.REGEX().getText().trim();
@@ -51,7 +51,7 @@ public class FileParser extends SkadiFileParserBaseListener {
         var id = ctx.ID().getText();
 
         if (automatonIdRegexMap.containsKey(id)) {
-            throw new SemanticAnalysisException("Multiple definitions of automaton " + id + "!");
+            throw new AnalysisException("Multiple definitions of automaton " + id + "!");
         }
 
         var regex = ctx.REGEX().getText().trim();
@@ -66,7 +66,18 @@ public class FileParser extends SkadiFileParserBaseListener {
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new SkadiRegexParser(tokenStream);
 
-        return parser.regex();
+        var errorListener = new ParseErrorListener();
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(errorListener);
+        parser.removeErrorListeners();
+        parser.addErrorListener(errorListener);
+
+        try {
+            return parser.regex();
+        } catch (AnalysisException e) {
+            var msg = "In regular expression '" + regex + "': " + e.getMessage();
+            throw new AnalysisException(msg);
+        }
     }
 
     @Override
@@ -84,7 +95,7 @@ public class FileParser extends SkadiFileParserBaseListener {
         ctx.embedding_key_value().forEach(kv -> kvMap.put(kv.ID(0).getText(), kv.ID(1).getText()));
 
         if (embeddings.containsKey(id)) {
-            throw new SemanticAnalysisException("Multiple definitions of embedding " + id + "!");
+            throw new AnalysisException("Multiple definitions of embedding " + id + "!");
         }
 
         embeddings.put(id, new Embedding(id, kvMap));

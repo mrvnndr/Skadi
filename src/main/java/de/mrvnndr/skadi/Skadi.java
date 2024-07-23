@@ -1,8 +1,9 @@
 package de.mrvnndr.skadi;
 
 import de.mrvnndr.skadi.analysis.AnalysisController;
+import de.mrvnndr.skadi.analysis.AnalysisException;
 import de.mrvnndr.skadi.analysis.AnalysisResult;
-import de.mrvnndr.skadi.analysis.SemanticAnalysisException;
+import de.mrvnndr.skadi.synthesis.GenerationException;
 import de.mrvnndr.skadi.synthesis.SynthesisResult;
 import de.mrvnndr.skadi.synthesis.Synthesizer;
 import de.mrvnndr.skadi.synthesis.generator.JavaGenerator;
@@ -47,15 +48,25 @@ public class Skadi implements Callable<Integer> {
         AnalysisResult analysisResult;
         try {
             analysisResult = AnalysisController.analyseFile(inputFile);
-        } catch (SemanticAnalysisException e) {
-            //Message was already printed by analysis.
+        } catch (AnalysisException e) {
+            if (!e.getMessage().isEmpty()) {
+                ConsoleUtil.error(e.getMessage());
+            }
             return 1;
         } catch (IOException e) {
             ConsoleUtil.error("Error reading input file: " + e.getMessage());
             return 1;
         }
 
-        var synthesisResult = Synthesizer.synthesize(analysisResult);
+        SynthesisResult synthesisResult;
+        try {
+            synthesisResult = Synthesizer.synthesize(analysisResult);
+        } catch (AnalysisException e) {
+            if (!e.getMessage().isEmpty()) {
+                ConsoleUtil.error(e.getMessage());
+            }
+            return 1;
+        }
 
         if (outputNFA || outputEpsilonNFA) {
             var ret = writeDOT(synthesisResult, analysisResult, inputFile);
@@ -64,8 +75,13 @@ public class Skadi implements Callable<Integer> {
             }
         }
 
-        var output = generateOutput(synthesisResult, targetLanguage);
-        System.out.println(output);
+        try {
+            var output = generateOutput(synthesisResult, targetLanguage);
+            System.out.println(output);
+        } catch (GenerationException e) {
+            ConsoleUtil.error(e.getMessage());
+            return 1;
+        }
 
         return 0;
     }
