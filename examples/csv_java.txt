@@ -1,0 +1,46 @@
+fragment comma = ","
+fragment field = "[\w]+"
+fragment row = "{field}({comma}{field})*\n"
+
+automaton csv = "{row}+"
+
+progress csv.row.field {
+    fieldList.add(String.valueOf(ascii));
+}
+
+finish csv.row {
+    System.out.println(fieldList);
+    fieldList.clear();
+}
+
+enter csv.row.comma {
+    System.out.println(fieldList);
+    fieldList.clear();
+}
+
+embedding csv (
+    definitions : csv_definitions,
+    transitions : csv_automaton,
+    regex : csv
+)
+
+embed csv in {
+    import java.util.HashSet;
+    import java.util.Set;
+    import java.util.ArrayList;
+
+    public class Automaton {
+        public static void main(String[] args) {
+            var inp = "abv,cde,gef\n";
+            process(inp);
+        }
+
+        public static void process(String input) {
+            var fieldList = new ArrayList<String>();
+            csv_definitions
+            for (char ascii : input.toCharArray()) {
+                csv_automaton
+            }
+        }
+    }
+}

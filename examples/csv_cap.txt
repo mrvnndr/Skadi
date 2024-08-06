@@ -1,0 +1,78 @@
+fragment comma = ","
+fragment lowerCase = "[a-z]"
+fragment upperCase = "[A-Z]"
+fragment field = "([0-9]|{lowerCase}|{upperCase})+"
+fragment field1 = "{field}"
+fragment field2 = "{field}"
+fragment row = "({field1}{comma}{field2}{comma}){127}{field1}{comma}{field2}\n"
+
+automaton csv = "{row}*"
+
+progress csv.row.field2.field.lowerCase {
+    pass_char := std_logic_vector(ascii - 32);
+}
+
+progress csv.row.field2.field.upperCase {
+    pass_char := std_logic_vector(ascii + 32);
+}
+
+embedding csv (
+    regex : csv,
+    transitions : csv_automaton,
+    reset : csv_reset,
+    procVar : csv_procVar
+)
+
+embed csv in {
+
+    library IEEE;
+    use IEEE.STD_LOGIC_1164.all;
+    use IEEE.numeric_std.ALL;
+    use IEEE.numeric_bit_unsigned.all;
+
+    entity Skadi_FSM_Impl is
+        port(clk, reset: in std_logic;
+            in_valid, in_last: in std_logic;
+            in_ready: out std_logic;
+            out_valid, out_last: out std_logic;
+            out_ready: in std_logic;
+            char_in: in std_logic_vector(7 downto 0);
+            char_out: out std_logic_vector(7 downto 0));
+    end;
+
+    architecture arch of Skadi_FSM_Impl is
+    begin
+        in_ready <= out_ready;
+        process(clk)
+            variable ascii : unsigned(7 downto 0);
+            variable pass_char : std_logic_vector(7 downto 0);
+            csv_procVar
+        begin
+            if rising_edge(clk) then
+
+                if reset = '0' or (unsigned(char_in) = 65535 and in_valid = '1') then
+                    csv_reset
+                    out_valid <= '0';
+                else
+                    out_valid <= in_valid;
+                    out_last <= in_last;
+
+                    if in_valid then
+                        ascii := unsigned(char_in);
+
+                        pass_char := char_in;
+
+                        csv_automaton
+
+                        if or state_register = '0' then
+                            pass_char := "11111111";
+                        end if;
+
+                        char_out <= pass_char;
+
+                    end if;
+                end if;
+            end if;
+        end process;
+    end;
+}

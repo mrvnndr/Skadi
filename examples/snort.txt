@@ -1,0 +1,330 @@
+fragment expr1 = "&itwm=([a-z0-9\-\=]{1,50})"
+fragment expr2 = "(%(25)?24|\x24)(%(25)?7b|\x7b)jndi(%(25)?3a|\x3a)"
+fragment expr3 = "(%(25)?24|\x24)(%(25)?7b|\x7b)lower(%(25)?3a|\x3a)"
+fragment expr4 = "(%(25)?24|\x24)(%(25)?7b|\x7b)upper(%(25)?3a|\x3a)"
+fragment expr5 = "(&|#|\+|!)"
+fragment expr6 = "(CLIENT|MACHINE)_INFO"
+fragment expr7 = "(\/api2|\/en-us|\/gp|\/v1|\/v3|\/v4|\/wp-content|\/wp-includes)"
+fragment expr8 = "(\/check|\/v1\/stats|\/gql|\/1.5\/95648064|\/u\/0\/_\/og\/botguard\/get|\/ev\/\w{3}001001)"
+fragment expr9 = "(\x00\x00\x00\x00|.{12})"
+fragment expr10 = "(\x03|\x04|\x05)"
+fragment expr11 = "(info|app)\x2ephp\x3fmessage\x3d"
+fragment expr12 = "(stem|slick)\.php\?utma"
+fragment expr13 = "--backup-dir\s+\x2e\x2e\x2f"
+fragment expr14 = ".{27}"
+fragment expr15 = ".{4}"
+fragment expr16 = ".{4}(\x00\x00\x00\x00|.{12})"
+fragment expr17 = "530\s+(Login|User)"
+fragment expr18 = "AUTH\s[^\n]{50}"
+fragment expr19 = "Accept-Encoding:\x20*[^\r\n]*\x2c[\x20\x09]*\x2c"
+fragment expr20 = "Argument\s+\/"
+fragment expr21 = "Authorization\x3A\s*Basic\s+TERBUF9Bbm9ueW1vdXM6TGRhcFBhc3N3b3JkXzE="
+fragment expr22 = "Authorization\x3a(\s*|\s*\r?\n\s+)Basic\s+="
+fragment expr23 = "Authorization\x3a(\s*|\s*\r?\n\s+)Basic\s+OmFkbWlu"
+fragment expr24 = "Authorization\x3a(\s*|\s*\r?\n\s+)Basic\s+YWRtaW46cGFzc3dvcmQ"
+fragment expr25 = "CAPA\s[^\n]{10}"
+fragment expr26 = "CWD\s+~"
+fragment expr27 = "CWD\s+~root"
+fragment expr28 = "CiWebHitsFile=\/?([^\r\n\x3b\&]*\.\.\/)?"
+fragment expr29 = "Content-Length\s*\x3a\s*-\d+"
+fragment expr30 = "Content-Length\x3A\s*[2-9][0-9]{9}"
+fragment expr31 = "Content-Type\x3A\s*image\x2F"
+fragment expr32 = "Content-Type\x3a[\x20\x09]+application\/octet-stream"
+fragment expr33 = "Content-Type\x3a[\x20\x09]+application\/x-msdos-program"
+fragment expr34 = "DELE\s+-\d"
+fragment expr35 = "DELE\s[^\n]{10}"
+fragment expr36 = "DEXT87(no|up|\d+\x2e\d+\x2e\d+\x2e\d+)"
+fragment expr37 = "Directory"
+fragment expr38 = "GALLERY_BASEDIR=(https?|ftps?|php)"
+fragment expr39 = "GET \/[a-z]{8,12}\?[a-z] HTTP\/1.1"
+fragment expr40 = "GET \/\w*.zip HTTP\/1.1\r\nHost\x3a\x20\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:\x3a\d{1,5})?\r\n"
+fragment expr41 = "GET\s(?:\/ads\/google|\/vi-assets\/static-assets|\/v1\/preferences|\/idcta\/translations|\/v2\/preferences)"
+fragment expr42 = "GateCrasher\s+v\d+\x2E\d+\x2C\s+Server\s+On-Line\x2E\x2E\x2E"
+fragment expr43 = "HTTP\/1.[01]\r\nUser\x2dAgent\x3a\x20[ -~]+\r\nHost\x3a\x20[a-z0-9\x2d\x2e]+\.info\r\n"
+fragment expr44 = "Host\x3a\s[a-z]{16}\.org\x0d"
+fragment expr45 = "Host\x3a\x20\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\r?\n"
+fragment expr46 = "Host\x3a\x20\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\r\n"
+fragment expr47 = "LIST\s+\x22-W\s+\d+"
+fragment expr48 = "LIST\s[^\n]{10}"
+fragment expr49 = "Linux\x20\d\.[0-9]{1,2}\.[0-9]{1,2}"
+fragment expr50 = "Location\x3a(\s*|\s*\r?\n\s+)*URL\s*\x3a"
+fragment expr51 = "MDTM \d+[-+]\D"
+fragment expr52 = "MODE\s+[^ABSC]{1}"
+fragment expr53 = "Max-dotdot[\s\r\n]*\d{3,}"
+fragment expr54 = "PASS\s*\n"
+fragment expr55 = "PASS\s[^\n]{49}"
+fragment expr56 = "PASS\s[^\n]{50}"
+fragment expr57 = "PORT"
+fragment expr58 = "POST\s"
+fragment expr59 = "POST\s(?:\/track|\/api\/v1\/survey\/embed|\/svc\/weather\/v2)"
+fragment expr60 = "POST\s\/[A-F0-9]{42}\s"
+fragment expr61 = "POST\x20\x2f[A-F\d]{42}\x20HTTP"
+fragment expr62 = "POST\x20\x2f[a-z]+\.[a-z]{3}\x20HTTP\x2f1\.1\r\n"
+fragment expr63 = "POST\x20\x2fg[ao]lfstream\x26"
+fragment expr64 = "PRIVMSG\s+[^\s]+\s+\x3a\s*\x01SENDLINK\x7c[^\x7c]{69}"
+fragment expr65 = "REST\s+[0-9]+\n"
+fragment expr66 = "RSET\s[^\n]{10}"
+fragment expr67 = "SITE\s+EXEC"
+fragment expr68 = "SITE\s+NEWER"
+fragment expr69 = "SOAPAction\x3a[^\r\n]*Get(ServerTime|FileList|File)\x22"
+fragment expr70 = "STAT\s+[^\n]*\x2a"
+fragment expr71 = "STAT\s+[^\n]*\x3f"
+fragment expr72 = "STAT\s[^\n]{10}"
+fragment expr73 = "Server\x5bpath\x5d=(https?|ftps?|php)"
+fragment expr74 = "TOP\s[^\n]{50}"
+fragment expr75 = "UIDL\s+-\d"
+fragment expr76 = "USER\s+(anonymous|ftp)[^\w]*[\r\n]"
+fragment expr77 = "USER\s+w0rm"
+fragment expr78 = "USER\s+y049575046"
+fragment expr79 = "USER\s[^\n]{49}"
+fragment expr80 = "USER\s[^\n]{50}"
+fragment expr81 = "User-Agent\x3A\x20[^\r\n]*sleep\x28"
+fragment expr82 = "User-Agent\x3a[^\r\n]*android"
+fragment expr83 = "User-Agent\x3a[^\r\n]*iPad"
+fragment expr84 = "User-Agent\x3a[^\r\n]*iPhone"
+fragment expr85 = "User-Agent\x3a[^\r\n]*iPod"
+fragment expr86 = "User-Agent\x3a[^\r\n]*kindle"
+fragment expr87 = "User-Agent\x3a[^\r\n]*nintendo"
+fragment expr88 = "User-Agent\x3a[^\r\n]*nokia"
+fragment expr89 = "User-Agent\x3a[^\r\n]*samsung"
+fragment expr90 = "User-Agent\x3a\x20[A-F0-9]{32}\x0d\x0a"
+fragment expr91 = "User\x2dAgent\x3a\x20[A-F\d]{32}\r\n"
+fragment expr92 = "Win64\x3B\sx64\x29\x3B\s[0-9]{16}\w{16}\x0D\x0A"
+fragment expr93 = "XEXCH50\s+-\d"
+fragment expr94 = "XTND\s[^\n]{50}"
+fragment expr95 = "[0-9A-Z]{8}\x3abpass\x0a"
+fragment expr96 = "[0-9]{1,5}\x00"
+fragment expr97 = "[?&]delete_offline_client=[^&]{14}"
+fragment expr98 = "[?&]id="
+fragment expr99 = "[?&]submit_button=[^&]+%0[^&]"
+fragment expr100 = "[?&]u=[^&\s]{35}"
+fragment expr101 = "[\x2f\x2b\x3d]"
+fragment expr102 = "[^ -~\r\n]{4}"
+fragment expr103 = "[^ -~\x0d\x0a]{4}"
+fragment expr104 = "[^>]*\x2f\x2f\d{1,3}\x2e\d{1,3}\x2e\d{1,3}\x2e\d{1,3}"
+fragment expr105 = "[^\n -~\r]{4}"
+fragment expr106 = "[^\r -~\n]{4}"
+fragment expr107 = "[^\x0d\x0a\x09\x20-\x7e]{4}"
+fragment expr108 = "[^\x20-\x7e\r\n]{3}"
+fragment expr109 = "[^\x20-\x7e\x0d\x0a]{4}"
+fragment expr110 = "[^\x3a\x3f]{11,}\x3a\x2f"
+fragment expr111 = "[a-z]{2}_[a-z0-9]{8}\.mod"
+fragment expr112 = "[a-z]{5}\d=_\d_"
+fragment expr113 = "\.[A-Z\d]{8}\x2d[A-Z\d]{6}\x2d[A-Z\d]{6}\x2d[A-Z\d]{8}"
+fragment expr114 = "\.php\?b=[A-F0-9]+&v=1\."
+fragment expr115 = "\.x[sm]l"
+fragment expr116 = "\/(search|find|results|open|search|close|watch)\/\x3f[a-zA-Z0-9]{2,8}\x3d"
+fragment expr117 = "\/News\/gate\.php\x3f[a-f0-9]{32}\x3d\d"
+fragment expr118 = "\/[^\r\n]*\x20.pl"
+fragment expr119 = "\/[a-f0-9]{32}\/[a-z]{1,15}-[a-z]{1,15}\.php"
+fragment expr120 = "\/[a-f0-9]{32}\/\w+\.bin"
+fragment expr121 = "\/[a-z0-9]{8,10}\x3f[A-Za-z]{7,10}\x3d[A-Za-z]{6,10}"
+fragment expr122 = "\/\d+\/\d\.zip\x27\x3b"
+fragment expr123 = "\/\d{8}\/\w{4}\/[A-F0-9]{4}\/[A-F0-9]{4}\/[A-Z0-9\-_~]{12}\.[aj]sp"
+fragment expr124 = "\/anony\/(jpgview\.htm|mjpeg\.cgi|view2\.cgi|mjpg\.cgi)"
+fragment expr125 = "\/board\.php\?(m=[0-9A-F]{0,12}&)?(v=([abcef]|\d+\.\d+))"
+fragment expr126 = "\/flupdate\/\d\.html"
+fragment expr127 = "\/indox\.php\x3fv=(pp|pe|s)"
+fragment expr128 = "\/info\.php\?act\x3d(list|online)"
+fragment expr129 = "\/link\.php\?.{4,20}&\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+fragment expr130 = "\/load(?:(?:db|rh|silver|msie|flash|fla[0-9]{4,5}))\.php"
+fragment expr131 = "\/log\.php\x3f[a-z]\x3d\d{3}"
+fragment expr132 = "\/plugins\/[a-z]{3,10}\.p"
+fragment expr133 = "\/software\x2ephp\x3f[0-9]{15,}"
+fragment expr134 = "\/v1\/(queue|profile|docs\/wsdl|pull)"
+fragment expr135 = "\/www\/(%[A-F0-9]{2}){5,}\/00"
+fragment expr136 = "\r\nHost\x3a\x20[a-z0-9\x2d\x2e]+\.com\x2d[a-z0-9\x2d\x2e]+(\x3a\d{1,5})?\r\n"
+fragment expr137 = "\r\nReferer\x3A\x20http\x3A\x2F\x2f[a-z0-9\x2d\x2e]+\x2F\x3Fdo\x3Dpayment\x26ver\x3D\d+\x26sid\x3D\d+\x26sn\x3D\d+\r\n"
+fragment expr138 = "\sCREATE\s*\{"
+fragment expr139 = "\sfilename=[a-z0-9]{0,20}receipt[a-z0-9]{0,20}\.zip"
+fragment expr140 = "\sfilename=[a-z0-9]{0,20}shipping[a-z0-9]{0,20}\.zip"
+fragment expr141 = "\sfilename=[a-z0-9]{0,20}statement[a-z0-9]{0,20}\.zip"
+fragment expr142 = "\sfilename=[a-z0-9]{0,20}voicemail[a-z0-9]{0,20}\.zip"
+fragment expr143 = "\x0aArray\x0a\x28\x0a\x20{4}\x5b[a-z\d]{11}\x5d\x20\x3d\x3e\x20\d{16}\x0a\x29"
+fragment expr144 = "\x0d\x0aContent\x2dLength\x3a\x20(124|132)\x0d\x0a"
+fragment expr145 = "\x22[a-z\d\x2e\x2d]{1,10}\x22\s{0,3}\+\s{0,3}\x22[a-z\d\x2e\x2d]{1,10}\x22\s{0,3}\+\s{0,3}\x22[a-z\d\x2e\x2d]{1,10}\x22"
+fragment expr146 = "\x2Fcon\b"
+fragment expr147 = "\x2Fdirect\.php\x3Ff=[0-9]{8}\x26s=[a-z0-9]{3}\.[a-z]{1,4}"
+fragment expr148 = "\x2Fin\.cgi\?(\w{1,6}|default)\b"
+fragment expr149 = "\x2ejs\x3f[a-zA-Z0-9]{9,20}=Mozilla\x2f"
+fragment expr150 = "\x2f"
+fragment expr151 = "\x2f(css|upload)\x2f[a-z]{2}[0-9]{3}\x2eccs"
+fragment expr152 = "\x2f(updates|license\x2feula|docs\x2foffice|software-activation)"
+fragment expr153 = "\x2f[A-Za-z0-9\x2b\x2f\x3d]{1,10}\x2f[A-Za-z0-9\x2b\x2f\x3d]{1,10}\x2f[A-Za-z0-9\x2b\x2f\x3d]{1,10}\x2f([A-Za-z0-9\x2b\x2f\x3d]{1,10})?(\x2f[A-Za-z0-9\x2b\x2f\x3d]{1,10})?"
+fragment expr154 = "\x2f[a-z0-9]{2,3}\x2f"
+fragment expr155 = "\x2f\?ts\x3d[a-f0-9]{40}\x26"
+fragment expr156 = "\x2f\x70\x6f\x63(\d*|\x5f[\x61-\x7a]+)\x2e(\x68\x74\x6d\x6c|\x78(\x6c\x73|\x73\x6c|\x6d\x6c)|\x6a(\x73|\x61\x76a)|\x61\x73\x70|\x70(\x64f|\x70\x74|\x48\x70|\x73\x64)|\x66\x6c\x76|\x73\x77\x66|\x64\x6fc|\x74\x74\x66|\x62\x6d\x70|\x6d(\x70\x33|\x33\x75))"
+fragment expr157 = "\x2fb\x2fpkg\x2fT202[0-9a-z]{10}"
+fragment expr158 = "\x2flevel\x2f\d+\x2f(exec|configure)"
+fragment expr159 = "\x2fpser\x3f[A-F0-9]{3,84}(BBZ|BBY)"
+fragment expr160 = "\x3c(REQIMG|RVWCFG)\x3e"
+fragment expr161 = "\x5csecure\x5c[^\x00]{50}"
+fragment expr162 = "\x5f\w{24}\.exe"
+fragment expr163 = "admin_root=(https?|ftps?|php)"
+fragment expr164 = "allhttp\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr165 = "antiddos\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr166 = "awstats.pl?[^\r\n]*logfile=\x7C"
+fragment expr167 = "b2inc=(https?|ftps?|php)"
+fragment expr168 = "caidao\s?=\s?(Response|Write|Execute)"
+fragment expr169 = "calendar(|[-_]admin)\.pl"
+fragment expr170 = "checkgroups\x3a[^\n]{21}"
+fragment expr171 = "connect\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr172 = "data\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr173 = "dataget\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr174 = "datapost\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr175 = "die\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr176 = "dns\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr177 = "download\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr178 = "exec\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr179 = "expn\s+\*@"
+fragment expr180 = "expn\s+decode"
+fragment expr181 = "expn\s+root"
+fragment expr182 = "fastddos\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr183 = "file=(https?|ftps?|php)"
+fragment expr184 = "file_manager_(init|root|faf)\x0d\x0a"
+fragment expr185 = "filename=[^\n]*\x2eair"
+fragment expr186 = "filename=[^\n]*\x2eani"
+fragment expr187 = "filename=[^\n]*\x2ebmp"
+fragment expr188 = "filename=[^\n]*\x2edib"
+fragment expr189 = "filename=[^\n]*\x2eemf"
+fragment expr190 = "filename=[^\n]*\x2eexe"
+fragment expr191 = "filename=[^\n]*\x2ejfi"
+fragment expr192 = "filename=[^\n]*\x2ejif"
+fragment expr193 = "filename=[^\n]*\x2ejpe"
+fragment expr194 = "filename=[^\n]*\x2ejpeg"
+fragment expr195 = "filename=[^\n]*\x2ejpg"
+fragment expr196 = "filename=[^\n]*\x2epaq8o"
+fragment expr197 = "filename=[^\n]*\x2epdf"
+fragment expr198 = "filename=[^\n]*\x2epjpeg"
+fragment expr199 = "filename=[^\n]*\x2epng"
+fragment expr200 = "filename=[^\n]*\x2ertf"
+fragment expr201 = "filename=[^\n]*\x2esami"
+fragment expr202 = "filename=[^\n]*\x2esmi"
+fragment expr203 = "filename=[^\n]*\x2exm"
+fragment expr204 = "filename=[^\n]*\x2exml"
+fragment expr205 = "filename=[^\n]*\x2exsl"
+fragment expr206 = "filename=[^\n]*\x2exslt"
+fragment expr207 = "filename=[^\n]*\x2ezip"
+fragment expr208 = "filename=[^\x3b\x3a\r\n]*(\x25\x2e\x25\x2e\x25\x5c|\x25\x32\x65\x25\x35\x63|\x2e\x2e\x5c)[^\x3b\x3a\r\n]*\x2ewmz"
+fragment expr209 = "filename=\x22\d+\x22\r\n"
+fragment expr210 = "forum=.*'"
+fragment expr211 = "ftp\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr212 = "full\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr213 = "gate\x2ephp\x3fid=[a-z]{15}"
+fragment expr214 = "gate\x2ephp\x3freg=[a-zA-Z]{15}"
+fragment expr215 = "gate\x2ephp\x3freg=[a-z]{10}"
+fragment expr216 = "hi00[0-9]{5}"
+fragment expr217 = "http\x3A\x2f\x2f1\.usa\.gov\x2f[a-f0-9]{6,8}"
+fragment expr218 = "http\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr219 = "icmp\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr220 = "ihave\x3a[^\n]{21}"
+fragment expr221 = "loginpost\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr222 = "myversion\x7c(\d\x2e){3}\d\x0d\x0a"
+fragment expr223 = "name\x3dscreenshot\d+\x2e"
+fragment expr224 = "newgroup\x3a[^\n]{32}"
+fragment expr225 = "object\s[^>]*type\s*=\s*[\x22\x27][^\x22\x27]*\x2f{32}"
+fragment expr226 = "page=(https?|ftps?|php)"
+fragment expr227 = "path=(https?|ftps?|php)"
+fragment expr228 = "php\?sf=\d+\&Ze=\d+\&m=\d+"
+fragment expr229 = "pm_path=(https?|ftps?|php)"
+fragment expr230 = "prototype([^\x7d]{1,3})?\x7dcatch\(\w{3}\)"
+fragment expr231 = "prototype([^\x7d]{1,3})?\x7dcatch\x28"
+fragment expr232 = "ps0=[A-F0-9]*&ps1=[A-F0-9]*&cs1=[A-F0-9]*&cs2=[A-F0-9]*&cs3=[A-F0-9]*"
+fragment expr233 = "range\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr234 = "rcpt to\:\s*decode"
+fragment expr235 = "rcpt\s+to\:\s*[\x7c\x3b]"
+fragment expr236 = "resolve\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr237 = "rmgroup\x3a[^\n]{32}"
+fragment expr238 = "sendme\x3a[^\n]{21}"
+fragment expr239 = "sendsys\x3a[^\n]{21}"
+fragment expr240 = "senduuname\x3a[^\n]{21}"
+fragment expr241 = "sid=[0-9A-F]{32}"
+fragment expr242 = "simple\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr243 = "sleep\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr244 = "slowhttp\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr245 = "stop\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr246 = "syn\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr247 = "systempath=(https?|ftps?|php)"
+fragment expr248 = "tcpdata\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr249 = "template=(https?|ftps?|php)"
+fragment expr250 = "udp\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr251 = "udpdata\x7c\d+\x7c\d+\x7C[a-z0-9]+\x2E[a-z]{2,3}\x7C[a-z0-9]+\x7C"
+fragment expr252 = "uid=\d{1,5}\S+\s+gid=\d{1,5}"
+fragment expr253 = "update=[^\r\n\x26]+"
+fragment expr254 = "version\x3a[^\n]{21}"
+fragment expr255 = "vrfy\s+decode"
+fragment expr256 = "vrfy\s+root"
+fragment expr257 = "z\d{1,3}"
+
+automaton a1 = "{expr2}|{expr4}|{expr6}|{expr8}|{expr10}|{expr12}|{expr14}|{expr16}|{expr18}|{expr20}|{expr22}|{expr24}|{expr26}|{expr28}|{expr30}|{expr32}|{expr34}|{expr36}|{expr38}|{expr40}|{expr42}|{expr44}|{expr46}|{expr48}|{expr50}|{expr52}|{expr54}|{expr56}|{expr58}|{expr60}|{expr62}|{expr64}|{expr66}|{expr68}|{expr70}|{expr72}|{expr74}|{expr76}|{expr78}|{expr80}|{expr82}|{expr84}|{expr86}|{expr88}|{expr90}|{expr92}|{expr94}|{expr96}|{expr98}|{expr100}|{expr102}|{expr104}|{expr106}|{expr108}|{expr110}|{expr112}|{expr114}|{expr116}|{expr118}|{expr120}|{expr122}|{expr124}|{expr126}|{expr128}|{expr130}|{expr132}|{expr134}|{expr136}|{expr138}|{expr140}|{expr142}|{expr144}|{expr146}|{expr148}|{expr150}|{expr152}|{expr154}|{expr156}|{expr158}|{expr160}|{expr162}|{expr164}|{expr166}|{expr168}|{expr170}|{expr172}|{expr174}|{expr176}|{expr178}|{expr180}|{expr182}|{expr184}|{expr186}|{expr188}|{expr190}|{expr192}|{expr194}|{expr196}|{expr198}|{expr200}|{expr202}|{expr204}|{expr206}|{expr208}|{expr210}|{expr212}|{expr214}|{expr216}|{expr218}|{expr220}|{expr222}|{expr224}|{expr226}|{expr228}|{expr230}|{expr232}|{expr234}|{expr236}|{expr238}|{expr240}|{expr242}|{expr244}|{expr246}|{expr248}|{expr250}|{expr252}|{expr254}|{expr256}"
+automaton a2 = "{expr1}|{expr3}|{expr5}|{expr7}|{expr9}|{expr11}|{expr13}|{expr15}|{expr17}|{expr19}|{expr21}|{expr23}|{expr25}|{expr27}|{expr29}|{expr31}|{expr33}|{expr35}|{expr37}|{expr39}|{expr41}|{expr43}|{expr45}|{expr47}|{expr49}|{expr51}|{expr53}|{expr55}|{expr57}|{expr59}|{expr61}|{expr63}|{expr65}|{expr67}|{expr69}|{expr71}|{expr73}|{expr75}|{expr77}|{expr79}|{expr81}|{expr83}|{expr85}|{expr87}|{expr89}|{expr91}|{expr93}|{expr95}|{expr97}|{expr99}|{expr101}|{expr103}|{expr105}|{expr107}|{expr109}|{expr111}|{expr113}|{expr115}|{expr117}|{expr119}|{expr121}|{expr123}|{expr125}|{expr127}|{expr129}|{expr131}|{expr133}|{expr135}|{expr137}|{expr139}|{expr141}|{expr143}|{expr145}|{expr147}|{expr149}|{expr151}|{expr153}|{expr155}|{expr157}|{expr159}|{expr161}|{expr163}|{expr165}|{expr167}|{expr169}|{expr171}|{expr173}|{expr175}|{expr177}|{expr179}|{expr181}|{expr183}|{expr185}|{expr187}|{expr189}|{expr191}|{expr193}|{expr195}|{expr197}|{expr199}|{expr201}|{expr203}|{expr205}|{expr207}|{expr209}|{expr211}|{expr213}|{expr215}|{expr217}|{expr219}|{expr221}|{expr223}|{expr225}|{expr227}|{expr229}|{expr231}|{expr233}|{expr235}|{expr237}|{expr239}|{expr241}|{expr243}|{expr245}|{expr247}|{expr249}|{expr251}|{expr253}|{expr255}|{expr257}"
+
+finish a2 {
+    pass_char := (others => '0');
+}
+
+embedding snort (
+    regex : a2,
+    transitions : snort_automaton,
+    reset : snort_reset,
+    procVar : snort_procVar
+)
+
+embed snort in {
+
+    library IEEE;
+    use IEEE.STD_LOGIC_1164.all;
+    use IEEE.numeric_std.ALL;
+    use IEEE.numeric_bit_unsigned.all;
+
+    entity Regex2_Impl is
+        port(clk, reset: in std_logic;
+            in_valid, in_last: in std_logic;
+            in_ready: out std_logic;
+            out_valid, out_last: out std_logic;
+            out_ready: in std_logic;
+            char_in: in std_logic_vector(7 downto 0);
+            char_out: out std_logic_vector(7 downto 0));
+    end;
+
+    architecture arch of Regex2_Impl is
+    begin
+        in_ready <= out_ready;
+        process(clk)
+            variable ascii : unsigned(7 downto 0);
+            variable cur_byte : std_logic_vector(7 downto 0);
+            variable pass_char : std_logic_vector(7 downto 0);
+            snort_procVar
+        begin
+            if rising_edge(clk) then
+
+                if reset = '0' then
+                    snort_reset
+                    out_valid <= '0';
+                else
+                    out_valid <= in_valid;
+                    out_last <= in_last;
+
+                    if in_valid then
+                        for pass_idx in 0 to 0 loop
+                            for i in 0 to 7 loop
+                                cur_byte(i) := char_in((pass_idx * 8) + i);
+                            end loop;
+                            ascii := unsigned(cur_byte);
+
+                            pass_char := (others => '1');
+
+                            snort_automaton
+
+                            state_register(1) := '1';
+
+                            for i in 0 to 7 loop
+                                char_out((pass_idx * 8) + i) <= pass_char(i);
+                            end loop;
+                        end loop;
+                    end if;
+                end if;
+            end if;
+        end process;
+    end;
+}

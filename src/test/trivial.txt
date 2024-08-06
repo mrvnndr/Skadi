@@ -1,0 +1,42 @@
+automaton csv = "[a-zA-Z]"
+
+embedding csv_automaton (
+    regex : csv,
+    transitions : csv_transitions,
+    reset : csv_reset,
+    procVar : csv_procVar
+)
+
+finish csv {
+    --finish action
+}
+
+embed csv_automaton in {
+
+    library IEEE;
+    use IEEE.STD_LOGIC_1164.all;
+    use IEEE.numeric_std.ALL;
+    use IEEE.numeric_bit_unsigned.all;
+
+    entity Skadi_FSM_Impl is
+        port(clk, reset: in std_logic;);
+    end;
+
+    architecture arch of Skadi_FSM_Impl is
+    begin
+        process(clk)
+            variable ascii : unsigned(7 downto 0);
+            csv_procVar
+        begin
+            if rising_edge(clk) then
+                if reset = '0' then
+                    csv_reset
+                else
+                    ascii := unsigned(char_in);
+
+                    csv_transitions
+                end if;
+            end if;
+        end process;
+    end;
+}
